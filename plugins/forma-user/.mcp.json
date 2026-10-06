@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "forma-user": {
+      "command": "python",
+      "args": ["-m", "forma_mcp.server"],
+      "env": {
+        "PYTHONPATH": "${CLAUDE_PLUGIN_ROOT}"
+      }
+    }
+  }
+}

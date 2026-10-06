@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Backups, scratch and test leftovers
+*.bak
+*.bak-*
+*.orig
+_*_test.txt
+_write_probe.txt
+
+# Office lock files and OS clutter
+~$*
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Build output - .plugin files are attached to GitHub Releases, not committed
+dist/
+*.plugin
+
+# Never in this repository
+#   - sign-in tokens: they live in ~/.forma-mcp on each person's machine
+#   - the MASTER Entity Bible: it holds tax file numbers and ASIC corporate keys.
+#     Only the extract made by make_entity_extract.py is committed.
+.forma-mcp/
+.env
+*Entity Bible*.xlsx
+*Entity_Bible_master*.xlsx

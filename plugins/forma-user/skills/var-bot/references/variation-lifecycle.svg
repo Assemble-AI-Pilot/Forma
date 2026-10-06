@@ -1,0 +1,151 @@
+<svg viewBox="0 0 992 772" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<pattern id="byhand" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#FFFFFF"/><line x1="0" y1="0" x2="0" y2="6" stroke="#414042" stroke-width="0.7" opacity="0.4"/></pattern>
+</defs>
+
+<rect x="0" y="0" width="992" height="772" rx="8" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="0.5"/>
+
+<text x="32" y="30" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">How a variation moves through Forma</text>
+<text x="32" y="48" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">Three records in sequence, sharing one Scope Item that holds the money: estimated, then proposed, then committed.</text>
+
+<path d="M164 112 L164 86 L828 86 L828 112" fill="none" stroke="#414042" stroke-width="1" stroke-dasharray="4 3" opacity="0.5" marker-end="url(#arrow)"/>
+<text x="496" y="78" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042" opacity="0.7">Generate direct &#8212; the exception, when there is no price to record</text>
+
+<!-- ============ POTENTIAL ============ -->
+<rect x="32" y="112" width="264" height="294" rx="8" fill="#F7F7F3" stroke="#7FA9F4" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="48" y="138" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">Potential Variation (PCO)</text>
+<text x="48" y="158" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">When you first learn of a variation</text>
+<text x="48" y="174" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">and estimate the cost impact</text>
+<text x="48" y="190" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042" opacity="0.7">Every document attaches here</text>
+
+<rect x="48" y="206" width="232" height="48" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="58" y="228" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">draft</text>
+<text x="58" y="244" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">stage 1: var-bot logs the flag</text>
+
+<line x1="164" y1="254" x2="164" y2="282" stroke="#0053E9" stroke-width="1" marker-end="url(#arrow)"/>
+
+<rect x="48" y="282" width="232" height="48" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="58" y="304" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">open</text>
+<text x="58" y="320" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">stage 2: var-bot opens it</text>
+
+<text x="48" y="356" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#414042">Scope Item</text>
+<rect x="48" y="364" width="76" height="26" rx="4" fill="#0053E9"/>
+<text x="86" y="381" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF">estimated</text>
+<rect x="126" y="364" width="76" height="26" rx="4" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="0.5"/>
+<text x="164" y="381" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042" opacity="0.5">proposed</text>
+<rect x="204" y="364" width="76" height="26" rx="4" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="0.5"/>
+<text x="242" y="381" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042" opacity="0.5">committed</text>
+
+<!-- ============ SUBMITTED ============ -->
+<rect x="364" y="112" width="264" height="294" rx="8" fill="#F7F7F3" stroke="#7FA9F4" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="380" y="138" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">Submitted Variation (RFQ)</text>
+<text x="380" y="158" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">When the vendor&#8217;s price arrives and</text>
+<text x="380" y="174" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">a real number replaces the estimate</text>
+<text x="380" y="190" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042" opacity="0.7">No approval is configured on this tier</text>
+
+<rect x="380" y="206" width="232" height="48" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="390" y="228" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">pricing</text>
+<text x="390" y="244" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">var-bot generates it from the PCO</text>
+
+<line x1="496" y1="254" x2="496" y2="282" stroke="#0053E9" stroke-width="1" marker-end="url(#arrow)"/>
+
+<rect x="380" y="282" width="232" height="48" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="390" y="304" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">proposed</text>
+<text x="390" y="320" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">var-bot records the price</text>
+
+<text x="380" y="356" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#414042">Scope Item</text>
+<rect x="380" y="364" width="76" height="26" rx="4" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="0.5"/>
+<text x="418" y="381" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042" opacity="0.5">estimated</text>
+<rect x="458" y="364" width="76" height="26" rx="4" fill="#0053E9"/>
+<text x="496" y="381" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF">proposed</text>
+<rect x="536" y="364" width="76" height="26" rx="4" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="0.5"/>
+<text x="574" y="381" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042" opacity="0.5">committed</text>
+
+<!-- ============ APPROVED ============ -->
+<rect x="696" y="112" width="264" height="518" rx="8" fill="#F7F7F3" stroke="#7FA9F4" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="712" y="138" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">Approved Variation (SCO)</text>
+<text x="712" y="158" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">When a variation has been agreed or</text>
+<text x="712" y="174" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">recommended, but still needs to be</text>
+<text x="712" y="190" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">internally approved</text>
+
+<rect x="712" y="206" width="232" height="40" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="722" y="223" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">draft</text>
+<text x="722" y="239" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">stage 3: var-bot creates it, committed</text>
+
+<line x1="828" y1="246" x2="828" y2="266" stroke="#414042" stroke-width="1" marker-end="url(#arrow)"/>
+
+<rect x="712" y="266" width="232" height="40" rx="4" fill="url(#byhand)" stroke="#414042" stroke-width="0.75"/>
+<text x="722" y="283" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#000000">open</text>
+<text x="722" y="299" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">a person opens it</text>
+
+<line x1="828" y1="306" x2="828" y2="326" stroke="#414042" stroke-width="1" marker-end="url(#arrow)"/>
+
+<rect x="712" y="326" width="232" height="40" rx="4" fill="url(#byhand)" stroke="#414042" stroke-width="0.75"/>
+<text x="722" y="343" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#000000">inReview</text>
+<text x="722" y="359" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">a person sends it; the approver reviews</text>
+
+<line x1="828" y1="366" x2="828" y2="386" stroke="#414042" stroke-width="1" marker-end="url(#arrow)"/>
+
+<rect x="712" y="386" width="232" height="40" rx="4" fill="url(#byhand)" stroke="#414042" stroke-width="0.75"/>
+<text x="722" y="403" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#000000">sent</text>
+<text x="722" y="419" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">approved; the vendor is notified</text>
+
+<line x1="828" y1="426" x2="828" y2="446" stroke="#414042" stroke-width="1" marker-end="url(#arrow)"/>
+
+<rect x="712" y="446" width="232" height="40" rx="4" fill="url(#byhand)" stroke="#414042" stroke-width="0.75"/>
+<text x="722" y="463" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#000000">executed</text>
+<text x="722" y="479" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">signed; a person sets it</text>
+
+<rect x="712" y="506" width="232" height="44" rx="4" fill="#FFFFFF" stroke="#0053E9" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="722" y="524" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">rec as compliance doc</text>
+<text x="722" y="541" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">to build: needs your decision first</text>
+
+<text x="712" y="572" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#414042">Scope Item</text>
+<rect x="712" y="580" width="76" height="26" rx="4" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="0.5"/>
+<text x="750" y="597" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042" opacity="0.5">estimated</text>
+<rect x="790" y="580" width="76" height="26" rx="4" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="0.5"/>
+<text x="828" y="597" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042" opacity="0.5">proposed</text>
+<rect x="868" y="580" width="76" height="26" rx="4" fill="#0053E9"/>
+<text x="906" y="597" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF">committed</text>
+
+<!-- inter-tier arrows -->
+<path d="M296 306 L330 306 L330 230 L364 230" fill="none" stroke="#0053E9" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="330" y="222" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#0053E9">Generate</text>
+
+<path d="M628 306 L662 306 L662 226 L696 226" fill="none" stroke="#0053E9" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="662" y="218" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#0053E9">Generate</text>
+
+<!-- stop state -->
+<line x1="164" y1="406" x2="164" y2="446" stroke="#F93934" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="496" y1="406" x2="496" y2="446" stroke="#F93934" stroke-width="1" marker-end="url(#arrow)"/>
+
+<rect x="88" y="446" width="440" height="48" rx="4" fill="#FFFFFF" stroke="#F93934" stroke-width="0.75"/>
+<text x="104" y="468" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#F93934">void / rejected</text>
+<text x="104" y="484" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">the variation stops here &#8212; nothing reaches the budget. A person decides it</text>
+
+<!-- legend -->
+<line x1="32" y1="650" x2="960" y2="650" stroke="#7FA9F4" stroke-width="0.5" opacity="0.5"/>
+
+<rect x="32" y="660" width="22" height="14" rx="3" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="62" y="671" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">var-bot does it today</text>
+
+<rect x="232" y="660" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#0053E9" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="262" y="671" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">var-bot will do it (to build)</text>
+
+<rect x="478" y="660" width="22" height="14" rx="3" fill="url(#byhand)" stroke="#414042" stroke-width="0.75"/>
+<text x="508" y="671" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">a person does it in Forma</text>
+
+<rect x="32" y="682" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#F93934" stroke-width="0.75"/>
+<text x="62" y="693" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">the variation stops here</text>
+
+<rect x="232" y="682" width="22" height="14" rx="3" fill="#F7F7F3" stroke="#7FA9F4" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="262" y="693" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">one Forma record</text>
+
+<rect x="478" y="682" width="22" height="14" rx="3" fill="#0053E9"/>
+<text x="508" y="693" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">where the money sits</text>
+
+<text x="32" y="722" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">Every solid box is a status. Down a column = one record changing status; across = Forma generates the next record, with its own number.</text>
+<text x="32" y="738" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">One Scope Item carries the money: the same item is attached to each record in turn, never recreated, so its three amounts sit side by side.</text>
+<text x="32" y="754" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">Every document attaches to the Potential Variation. The dashed box is stage 3's planned change, not a status, and needs a decision first.</text>
+</svg>

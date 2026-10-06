@@ -1,0 +1,105 @@
+<svg viewBox="0 0 1116 740" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="1116" height="740" rx="8" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="0.5"/>
+
+<text x="32" y="30" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">The forma-user plugin: its skills</text>
+<text x="32" y="48" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">Ask in plain English. The router names the right front door; each front door works out the step and hands over to its step skill.</text>
+
+<!-- router -->
+<rect x="428" y="66" width="260" height="44" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="440" y="85" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">forma-bots (router)</text>
+<text x="440" y="101" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">copied into your own skills folder</text>
+<path d="M558 110 L558 130 L416 130 L416 152" fill="none" stroke="#414042" stroke-width="1"/>
+<path d="M558 130 L958 130 L958 152" fill="none" stroke="#414042" stroke-width="1"/>
+
+<!-- ============ COST ADMIN ============ -->
+<rect x="32" y="152" width="768" height="440" rx="8" fill="#F7F7F3" stroke="#7FA9F4" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="48" y="176" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">Cost admin</text>
+<text x="48" y="194" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">moving Assemble's cost records through their workflow</text>
+
+<rect x="48" y="206" width="736" height="40" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="60" y="223" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">desk-bot</text>
+<text x="60" y="239" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">the viewer across all three families: the Cost &amp; Spend Desk, refreshed from Forma. Reads only</text>
+
+<rect x="48" y="256" width="736" height="40" rx="4" fill="#FFFFFF" stroke="#0053E9" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="60" y="273" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">scout-bot</text>
+<text x="60" y="289" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">reads Aconex (and email, once connected) and suggests next moves on the desk's Next steps tab. Never writes to Forma</text>
+
+<!-- contract family -->
+<rect x="48" y="312" width="240" height="40" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="60" y="329" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">contract-bot</text>
+<text x="60" y="345" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">front door: routes on contract status</text>
+<path d="M58 352 L58 492" fill="none" stroke="#414042" stroke-width="0.75"/>
+<path d="M58 380 L68 380 M58 436 L68 436 M58 492 L68 492" fill="none" stroke="#414042" stroke-width="0.75"/>
+
+<rect x="68" y="362" width="220" height="40" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="78" y="379" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#0053E9">contract-vendor-selection</text>
+<text x="78" y="395" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">1. rec + draft contract</text>
+
+<rect x="68" y="418" width="220" height="40" rx="4" fill="#FFFFFF" stroke="#0053E9" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="78" y="435" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#0053E9">contract-vendor-approval</text>
+<text x="78" y="451" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">2. terms, submit, send · Phase B</text>
+
+<rect x="68" y="474" width="220" height="40" rx="4" fill="#FFFFFF" stroke="#0053E9" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="78" y="491" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#0053E9">contract-vendor-execution</text>
+<text x="78" y="507" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">3. compile the agreement · Phase B</text>
+
+<!-- variation family -->
+<rect x="304" y="312" width="240" height="40" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="316" y="329" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">var-bot</text>
+<text x="316" y="345" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">front door: routes on the evidence</text>
+<path d="M314 352 L314 492" fill="none" stroke="#414042" stroke-width="0.75"/>
+<path d="M314 380 L324 380 M314 436 L324 436 M314 492 L324 492" fill="none" stroke="#414042" stroke-width="0.75"/>
+
+<rect x="324" y="362" width="220" height="40" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="334" y="379" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#0053E9">variation-estimated</text>
+<text x="334" y="395" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">1. log the flag on a PCO</text>
+
+<rect x="324" y="418" width="220" height="40" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="334" y="435" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#0053E9">variation-proposed</text>
+<text x="334" y="451" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">2. record the price on an RFQ</text>
+
+<rect x="324" y="474" width="220" height="40" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="334" y="491" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#0053E9">variation-committed</text>
+<text x="334" y="507" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">3. approval doc + SCO + transfer</text>
+
+<!-- expense family -->
+<rect x="560" y="312" width="224" height="40" rx="4" fill="#FFFFFF" stroke="#0053E9" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="572" y="329" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">expense-bot</text>
+<text x="572" y="345" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">front door, not built yet</text>
+<text x="572" y="380" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042" opacity="0.7">its steps are still to be mapped</text>
+
+<!-- morning routine -->
+<rect x="48" y="534" width="736" height="40" rx="4" fill="#FFFFFF" stroke="#0053E9" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="60" y="551" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">morning routine</text>
+<text x="60" y="567" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">a scheduled task, weekdays: desk-bot refreshes the desk, then scout-bot runs. Reads Forma, never writes to it</text>
+
+<!-- ============ FORMA INFORMATION ============ -->
+<rect x="832" y="152" width="252" height="440" rx="8" fill="#F7F7F3" stroke="#7FA9F4" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="848" y="176" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">Forma information</text>
+<text x="848" y="194" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">finding things out</text>
+
+<rect x="848" y="206" width="220" height="40" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="860" y="223" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">forma-user</text>
+<text x="860" y="239" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">questions about project money</text>
+
+<rect x="848" y="256" width="220" height="40" rx="4" fill="#FFFFFF" stroke="#0053E9" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="860" y="273" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">forma-reporting</text>
+<text x="860" y="289" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">set reports, in the right format</text>
+
+<!-- foundation -->
+<rect x="32" y="608" width="1052" height="40" rx="4" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="44" y="625" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" fill="#0053E9">forma_mcp server</text>
+<text x="44" y="641" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">every Forma read and write goes through it: per-call confirmation, workflow rules for every status move, a read-back after every write</text>
+
+<!-- legend -->
+<line x1="32" y1="664" x2="1084" y2="664" stroke="#7FA9F4" stroke-width="0.5" opacity="0.5"/>
+<rect x="32" y="674" width="22" height="14" rx="3" fill="#E6EFFE" stroke="#0053E9" stroke-width="0.75"/>
+<text x="62" y="685" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">built</text>
+<rect x="132" y="674" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#0053E9" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="162" y="685" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">to build</text>
+<rect x="252" y="674" width="22" height="14" rx="3" fill="#F7F7F3" stroke="#7FA9F4" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="282" y="685" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">group</text>
+
+<text x="32" y="712" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">Front doors are what you ask for; each hands over to its own step skills. Each family's workflow, with what is built: skills/contract-bot/references/contract-lifecycle.svg</text>
+<text x="32" y="728" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#414042">and skills/var-bot/references/variation-lifecycle.svg. Pending Vendor Input (step 1) and the stage 3 compliance document are still to build inside built skills.</text>
+</svg>

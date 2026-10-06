@@ -1,0 +1,8 @@
+{
+  "name": "forma-user",
+  "description": "Autodesk Forma (ACC Cost Management) for Assemble: budgets, contracts, variations, expenses, progress claims and contingency. BETA of the cost-admin architecture. Cost admin: contract-bot (consultant contracts, from vendor selection to execution) and var-bot (variations, estimated to committed), each a front door over its step skills; desk-bot (the Cost & Spend Desk); scout-bot (suggested next moves from Aconex). Forma information: forma-user (questions about project money). Reads, and creates or amends DRAFT contracts and variations. Every write needs explicit per-call confirmation naming the project. Moves a record only along the steps its declared workflow rules allow, cannot delete, and cannot touch the NetSuite integration.",
+  "version": "0.10.1-beta",
+  "author": {
+    "name": "Assemble Communities"
+  }
+}

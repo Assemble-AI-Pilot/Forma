@@ -1,0 +1,1349 @@
+<title>Cost &amp; Spend Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+<style>
+/* Assemble's palette, read from assemble.com.au. Their faces (Agipo, Bradford)
+   are licensed and not on Google Fonts, the only host this sandbox allows, so
+   Archivo and Newsreader stand in for the grotesque and the serif.
+
+   Two devices carry the page, and which one leads depends on the question:
+     COST  — "who has it, and for how long?"  -> the approval chain leads
+     SPEND — "is there headroom on the line?" -> the budget track leads
+   Both tabs have both, ordered to the question they answer. */
+:root{
+  --paper:#F7F7F3; --card:#FFFFFF; --sunk:#F1F1EC; --raise:#FBFBF9;
+  --ink:#24252D; --muted:#6B6C77; --faint:#93949E;
+  --rule:#DFDFD8; --rule-hard:#C6C6BE;
+  --blue:#0052EB; --blue-soft:#E2EDFD; --blue-deep:#003BAD;
+  --over:#B4342A; --over-soft:#FBE6E3;
+  --tight:#8A6212; --tight-soft:#FBF0DA;
+  --clear:#1F7A54; --clear-soft:#E0F1E8;
+  --sans:Archivo,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --serif:Newsreader,Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131419; --card:#1B1C22; --sunk:#212229; --raise:#24252D;
+  --ink:#EDEDE8; --muted:#9A9BA6; --faint:#71727D;
+  --rule:#2C2D36; --rule-hard:#3C3D48;
+  --blue:#5E9BFF; --blue-soft:#17233D; --blue-deep:#9BC0FF;
+  --over:#EE8579; --over-soft:#35201D;
+  --tight:#DCAE55; --tight-soft:#332A17;
+  --clear:#63C296; --clear-soft:#142C21;
+}}
+:root[data-theme="dark"]{
+  --paper:#131419; --card:#1B1C22; --sunk:#212229; --raise:#24252D;
+  --ink:#EDEDE8; --muted:#9A9BA6; --faint:#71727D;
+  --rule:#2C2D36; --rule-hard:#3C3D48;
+  --blue:#5E9BFF; --blue-soft:#17233D; --blue-deep:#9BC0FF;
+  --over:#EE8579; --over-soft:#35201D;
+  --tight:#DCAE55; --tight-soft:#332A17;
+  --clear:#63C296; --clear-soft:#142C21;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;margin:0}
+h1,h2,h3{margin:0;text-wrap:balance}
+.num{font-variant-numeric:tabular-nums}
+.spacer{flex:1}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--blue)}
+
+/* ---------- masthead: wordmark + supertabs ---------- */
+.mast{background:var(--card);border-bottom:1px solid var(--rule-hard)}
+.mastin{max-width:1300px;margin:0 auto;padding:16px 20px 0;
+  display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:13px;padding-bottom:13px}
+.brand svg{height:23px;width:auto;display:block;color:var(--ink)}
+.brand .div{width:1px;height:22px;background:var(--rule-hard)}
+.brand .unit{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:-.005em}
+.supers{display:flex;gap:4px;margin-left:auto}
+.super{appearance:none;border:0;background:none;cursor:pointer;font-family:var(--sans);
+  font-size:16px;font-weight:700;color:var(--muted);padding:10px 20px 14px;
+  border-bottom:3px solid transparent;margin-bottom:-1px;letter-spacing:-.01em}
+.super:hover{color:var(--ink)}
+.super[aria-selected="true"]{color:var(--blue);border-bottom-color:var(--blue)}
+.super .n{display:block;font-size:11px;font-weight:600;color:var(--faint);
+  letter-spacing:.04em;margin-top:1px}
+.super[aria-selected="true"] .n{color:var(--blue)}
+
+.wrap{max-width:1300px;margin:0 auto;padding-inline:20px;padding-block:26px 80px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+h1{font-family:var(--serif);font-size:clamp(27px,4.2vw,40px);font-weight:400;
+  letter-spacing:-.015em;line-height:1.05;margin:6px 0 6px}
+.lede{color:var(--muted);max-width:58ch;font-size:14.5px;margin:0}
+.stampbox{text-align:right;font-size:12px;color:var(--faint);white-space:nowrap}
+.stampbox b{display:block;color:var(--ink);font-weight:500;font-size:13px}
+
+.tabs{display:flex;gap:2px;margin:24px 0 0;border-bottom:2px solid var(--rule-hard);flex-wrap:wrap}
+.tab{appearance:none;border:0;background:none;cursor:pointer;font-family:var(--sans);
+  font-size:15px;font-weight:600;color:var(--muted);padding:11px 18px 13px;
+  border-bottom:3px solid transparent;margin-bottom:-2px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--blue);border-bottom-color:var(--blue)}
+.tab .n{font-size:12px;font-weight:600;background:var(--sunk);color:var(--muted);
+  border-radius:20px;padding:1px 8px;margin-left:7px}
+.tab[aria-selected="true"] .n{background:var(--blue-soft);color:var(--blue)}
+
+.subs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0;padding:5px;
+  background:var(--sunk);border-radius:9px;width:fit-content;max-width:100%}
+.sub{appearance:none;border:0;background:none;cursor:pointer;font-family:var(--sans);
+  font-size:13.5px;font-weight:600;color:var(--muted);padding:7px 15px;border-radius:6px;
+  white-space:nowrap}
+.sub:hover{color:var(--ink)}
+.sub[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(36,37,45,.09)}
+.sub .n{font-size:11.5px;font-weight:600;color:var(--faint);margin-left:6px}
+.sub[aria-selected="true"] .n{color:var(--blue)}
+
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0 4px;min-height:1px}
+.chip{font-size:12.5px;font-weight:600;padding:6px 13px;border:1px solid var(--rule-hard);
+  background:var(--card);color:var(--muted);border-radius:40px;cursor:pointer;font-family:var(--sans)}
+.chip:hover{border-color:var(--blue);color:var(--blue)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.chip:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+.tiles{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(176px,1fr));margin:22px 0 4px}
+.tile{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:16px 18px}
+.tile .k{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.tile .v{font-size:29px;font-weight:600;letter-spacing:-.03em;margin-top:6px;line-height:1.05}
+.tile .s{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+.tile.alert{border-color:var(--over);background:var(--over-soft)}
+.tile.alert .v,.tile.alert .k{color:var(--over)}
+.tile.warn{border-color:var(--tight);background:var(--tight-soft)}
+.tile.warn .v,.tile.warn .k{color:var(--tight)}
+
+.flag{display:flex;gap:13px;background:var(--over-soft);border:1px solid var(--over);
+  border-radius:10px;padding:14px 17px;margin:16px 0 0;font-size:13.5px;line-height:1.5}
+.flag.amber{background:var(--tight-soft);border-color:var(--tight)}
+.flag .mk{font-weight:700;flex:none;color:var(--over);font-size:15px}
+.flag.amber .mk{color:var(--tight)}
+.flag b{color:var(--over)} .flag.amber b{color:var(--tight)}
+.flag p{margin:0 0 5px} .flag p:last-child{margin:0}
+
+.proj{margin-top:26px}
+.proj-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding-bottom:9px;border-bottom:2px solid var(--ink);margin-bottom:16px}
+.proj-head h2{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.proj-head .meta{font-size:12.5px;color:var(--muted);font-weight:500}
+
+.rec{background:var(--card);border:1px solid var(--rule-hard);border-radius:10px;
+  margin-bottom:12px;overflow:hidden}
+.rec.mine{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.rec.stale{border-left:4px solid var(--over)}
+.rec.contra{border-left:4px solid var(--tight)}
+.top{display:grid;gap:14px 20px;padding:15px 18px;
+  grid-template-columns:minmax(210px,1.6fr) 118px 136px auto;align-items:start}
+.who{min-width:0}
+.vb{font-size:12px;font-weight:600;color:var(--blue);letter-spacing:.02em}
+.ent{font-size:16px;font-weight:600;letter-spacing:-.01em;margin-top:1px;line-height:1.25}
+.desc{font-size:12.5px;color:var(--muted);margin-top:3px}
+.lbl{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:3px}
+.due{font-size:14px;font-weight:500}
+.age{font-size:11.5px;font-weight:600;margin-top:2px}
+.age.late{color:var(--over)} .age.soon{color:var(--tight)} .age.ok{color:var(--muted)}
+.amt{font-size:23px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.amt.credit{color:var(--clear)}
+.amt small{display:block;font-size:11.5px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--faint);margin-top:4px}
+.withwho{font-size:12.5px;color:var(--muted);text-align:right;line-height:1.45}
+.withwho .lbl{display:block;margin-bottom:3px}
+.withwho b{color:var(--ink);font-weight:600}
+
+/* the approval chain */
+.chain{padding:13px 18px 14px;background:var(--raise);border-top:1px solid var(--rule)}
+.steps{display:flex;flex-wrap:wrap;margin-bottom:9px}
+.step{padding:7px 14px 7px 13px;font-size:12.5px;border:1px solid var(--rule-hard);
+  border-right:0;background:var(--card);min-width:0}
+.step:first-child{border-radius:7px 0 0 7px}
+.step:last-child{border-right:1px solid var(--rule-hard);border-radius:0 7px 7px 0}
+.step .nm{font-weight:600;display:block}
+.step .by{font-size:11.5px;color:var(--muted);display:block;margin-top:1px;white-space:nowrap}
+.step.done{background:var(--sunk);color:var(--muted)}
+.step.done .nm{color:var(--ink)}
+.step.done .nm::before{content:"✓ ";color:var(--clear);font-weight:700}
+.step.now{background:var(--blue-soft);border-color:var(--blue);border-right:1px solid var(--blue)}
+.step.now .nm{color:var(--blue-deep)}
+.step.now.hot{background:var(--over-soft);border-color:var(--over)}
+.step.now.hot .nm{color:var(--over)}
+.step.todo{border-style:dashed;color:var(--faint)}
+.step.todo .nm{color:var(--faint);font-weight:500}
+.chain-note{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);align-items:baseline}
+.chain-note b{color:var(--ink);font-weight:600}
+.verdict{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:4px 10px;border-radius:40px;white-space:nowrap}
+.verdict.clear{background:var(--clear-soft);color:var(--clear)}
+.verdict.tight{background:var(--tight-soft);color:var(--tight)}
+.verdict.over{background:var(--over-soft);color:var(--over)}
+.verdict.none{background:var(--sunk);color:var(--muted)}
+
+/* the budget track */
+.track{position:relative;height:9px;background:var(--sunk);border-radius:5px;margin:24px 0 9px}
+.seg{position:absolute;top:0;height:9px}
+.seg.spent{background:var(--ink);opacity:.42;border-radius:5px 0 0 5px}
+.seg.other{background:var(--blue);opacity:.32}
+.seg.this{background:var(--blue)}
+.mark{position:absolute;top:-5px;height:19px;width:2px;background:var(--ink)}
+.mark::after{content:attr(data-l);position:absolute;bottom:22px;left:0;transform:translateX(-50%);
+  font-size:10.5px;font-weight:600;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+.mark.hot{background:var(--over)} .mark.hot::after{color:var(--over)}
+.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted);align-items:center}
+.legend i{display:inline-block;width:9px;height:9px;margin-right:5px;vertical-align:-1px;border-radius:2px}
+.legend b{color:var(--ink);font-weight:600}
+
+/* dropdowns: documents and schedule of values */
+details.drop{border-top:1px solid var(--rule);background:var(--raise)}
+details.drop > summary{cursor:pointer;padding:11px 18px;font-size:12.5px;font-weight:600;
+  color:var(--blue);list-style:none;display:flex;align-items:center;gap:8px}
+details.drop > summary::-webkit-details-marker{display:none}
+details.drop > summary .caret{font-size:11px;transition:transform .15s;display:inline-block}
+details.drop[open] > summary .caret{transform:rotate(90deg)}
+details.drop > summary:hover{color:var(--blue-deep)}
+details.drop > summary svg{width:15px;height:15px;flex:none}
+.dropbody{padding:0 18px 16px}
+.files{display:grid;gap:7px}
+.file{display:flex;align-items:center;gap:9px;font-size:13px;padding:8px 11px;
+  background:var(--card);border:1px solid var(--rule);border-radius:7px;
+  color:var(--ink);text-decoration:none}
+.file:hover{border-color:var(--blue);color:var(--blue)}
+.file svg{width:15px;height:15px;flex:none;color:var(--faint)}
+.file:hover svg{color:var(--blue)}
+.file .fn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file .ext{margin-left:auto;font-size:10.5px;font-weight:700;letter-spacing:.08em;
+  color:var(--faint);flex:none}
+.scope{font-size:13px;color:var(--muted);margin:0 0 13px;max-width:78ch;line-height:1.5}
+.sovtable{width:100%;border-collapse:collapse;font-size:13px}
+.sovtable th{text-align:left;font-size:10.5px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--faint);padding:0 10px 7px 0;border-bottom:1px solid var(--rule-hard)}
+.sovtable td{padding:7px 10px 7px 0;border-bottom:1px solid var(--rule)}
+.sovtable tr:last-child td{border-bottom:0}
+.sovtable td.r,.sovtable th.r{text-align:right;padding-right:0;font-variant-numeric:tabular-nums}
+.sovtable tr.stage td{color:var(--muted);font-size:12.5px}
+.sovtable tr.stage td:first-child{padding-left:19px}
+.sovtable tr.total td{font-weight:700;border-top:1px solid var(--rule-hard);border-bottom:0}
+.ins{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:12px}
+.ins b{color:var(--ink);font-weight:600}
+
+.blocks{display:flex;gap:7px;flex-wrap:wrap;padding:0 18px 14px;background:var(--raise)}
+.blk{font-size:12px;font-weight:600;padding:4px 11px;border-radius:40px;
+  background:var(--tight-soft);color:var(--tight);border:1px solid var(--tight)}
+.blk.red{background:var(--over-soft);color:var(--over);border-color:var(--over)}
+
+.acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 18px 14px;
+  background:var(--blue-soft);border-top:1px solid var(--blue)}
+.acts .note{font-size:12px;color:var(--blue-deep);flex:1;min-width:190px;line-height:1.4}
+.btn{font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:7px;
+  border:1px solid var(--rule-hard);background:var(--card);color:var(--ink);cursor:pointer;
+  text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-family:var(--sans)}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+.btn.ok{border-color:var(--clear);color:var(--clear)}
+.btn.ok:hover{background:var(--clear);color:#fff}
+.btn.back{border-color:var(--tight);color:var(--tight)}
+.btn.back:hover{background:var(--tight);color:#fff}
+.cmt{width:100%;font-family:var(--sans);font-size:13px;padding:9px 11px;margin-top:4px;
+  border:1px solid var(--rule-hard);border-radius:7px;background:var(--card);color:var(--ink);
+  resize:vertical;min-height:60px}
+.queued{padding:11px 18px 13px;background:var(--clear-soft);border-top:1px solid var(--clear);
+  font-size:12.5px;color:var(--clear);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.queued b{font-weight:700}
+.queued.rev{background:var(--tight-soft);border-color:var(--tight);color:var(--tight)}
+.queued .undo{background:none;border:0;font:inherit;text-decoration:underline;cursor:pointer;
+  color:inherit;padding:0;font-weight:600}
+
+.empty{background:var(--card);border:1px dashed var(--rule-hard);border-radius:10px;
+  padding:30px 24px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--ink);font-size:16px;font-weight:600;margin-bottom:5px;
+  font-family:var(--serif)}
+
+.sect{margin-top:26px}
+.sect h3{font-family:var(--serif);font-size:21px;font-weight:400;margin-bottom:4px}
+.sect p.sub2{color:var(--muted);font-size:13.5px;margin:0 0 14px;max-width:74ch}
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:18px;margin-bottom:18px}
+.bars{display:grid;gap:9px}
+.brow{display:grid;grid-template-columns:minmax(150px,1.2fr) 2fr 118px;gap:12px;align-items:center;font-size:13px}
+.bwrap{display:block;background:var(--sunk);border-radius:4px;height:20px;overflow:hidden}
+.bfill{display:block;height:20px;min-width:3px;background:var(--blue);border-radius:4px}
+.bfill.warn{background:var(--tight)} .bfill.bad{background:var(--over)}
+.brow .cap{color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.lines{width:100%;border-collapse:collapse;font-size:13.5px}
+.lines th{text-align:left;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);padding:0 10px 8px 0;border-bottom:1px solid var(--rule-hard)}
+.lines td{padding:9px 10px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.lines tr:last-child td{border-bottom:0}
+.lines td.r,.lines th.r{text-align:right;padding-right:0;font-variant-numeric:tabular-nums}
+.lines td.bad{color:var(--over);font-weight:600}
+.tscroll{overflow-x:auto}
+
+footer.foot{margin-top:44px;padding-top:20px;border-top:1px solid var(--rule-hard);
+  font-size:12.5px;color:var(--muted);display:grid;gap:7px}
+footer.foot b{color:var(--ink);font-weight:600}
+.refresh{display:flex;gap:9px;align-items:baseline;background:var(--card);
+  border:1px solid var(--rule);border-radius:9px;padding:12px 15px;margin-bottom:3px}
+.refresh .dot{width:7px;height:7px;border-radius:50%;background:var(--clear);flex:none;
+  margin-top:6px}
+
+@media (max-width:860px){
+  .top{grid-template-columns:1fr 1fr;gap:12px}
+  .who{grid-column:1/-1}
+  .withwho{text-align:left}
+  .brow{grid-template-columns:1fr;gap:3px}
+  .brow .cap{text-align:left}
+  .head{flex-direction:column;align-items:flex-start}
+  .stampbox{text-align:left}
+  .mastin{gap:10px}
+  .supers{margin-left:0;width:100%}
+  .super{flex:1;padding-inline:10px}
+  .step{border-right:1px solid var(--rule-hard);border-radius:7px!important;margin:0 4px 4px 0}
+}
+/* the team-mode notice: who you are, and who else can see this */
+.teamnote{margin:14px 0 0;padding:10px 12px;border:1px solid var(--rule);
+  border-left:3px solid var(--blue);border-radius:6px;background:var(--raise);
+  font-size:12.5px;color:var(--muted);line-height:1.55}
+.teamnote b{color:var(--ink);font-weight:600}
+/* next steps: scout-bot's suggested moves, read from the db, never the payload */
+.btn svg{width:14px;height:14px;flex:none}
+.sgtop{display:grid;gap:14px 22px;padding:15px 18px;
+  grid-template-columns:minmax(220px,1.5fr) minmax(200px,1fr) auto;align-items:start}
+.hop{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:2px}
+.stg{font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:6px;
+  border:1px solid var(--rule-hard);background:var(--sunk);color:var(--muted)}
+.stg.to{background:var(--blue-soft);border-color:var(--blue);color:var(--blue-deep)}
+.arw{color:var(--faint);font-weight:700}
+.skl{font-size:12px;color:var(--muted);margin-top:8px}
+.skl code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;
+  color:var(--ink);background:var(--sunk);padding:1px 6px;border-radius:4px}
+.conf{text-align:right}
+.conf .age{margin-top:8px}
+.evid{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;padding:12px 18px 13px;
+  background:var(--raise);border-top:1px solid var(--rule);font-size:12.5px;color:var(--muted)}
+.evid .src{display:inline-flex;align-items:center;gap:6px;color:var(--ink)}
+.evid .src svg{width:14px;height:14px;color:var(--faint);flex:none}
+.evid .subj{color:var(--ink)}
+.evid blockquote{flex:0 0 100%;margin:2px 0 0;padding:2px 0 2px 12px;
+  border-left:2px solid var(--rule-hard);font-family:var(--serif);font-size:14.5px;
+  color:var(--ink);max-width:78ch}
+.srclink{display:inline-flex;align-items:center;gap:5px;font-weight:600;color:var(--blue);
+  text-decoration:none}
+.srclink:hover{color:var(--blue-deep);text-decoration:underline}
+.srclink svg{width:13px;height:13px;flex:none}
+.sfiles{flex:0 0 100%;display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.sfile{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;padding:5px 10px;
+  border:1px solid var(--rule);border-radius:6px;background:var(--card);color:var(--ink);
+  text-decoration:none;min-width:0}
+a.sfile:hover{border-color:var(--blue);color:var(--blue)}
+.sfile svg{width:13px;height:13px;color:var(--faint);flex:none}
+.hist{padding:10px 18px 11px;border-top:1px solid var(--rule);font-size:12.5px;
+  color:var(--muted);background:var(--raise)}
+.hist b{color:var(--ink);font-weight:600}
+.hist.upd{background:var(--blue-soft);border-top-color:var(--blue);color:var(--blue-deep)}
+.hist.upd b{color:var(--blue-deep)}
+.sug .blocks{padding-top:12px}
+.decide{display:grid;gap:10px;padding:13px 18px 15px;background:var(--blue-soft);
+  border-top:1px solid var(--blue)}
+.decide .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.decide .note{font-size:12px;color:var(--blue-deep);flex:1;min-width:200px;line-height:1.4}
+.decide .cmt{margin:0;min-height:52px}
+.queued .cm{color:var(--ink)}
+.queued.fin{background:var(--sunk);border-color:var(--rule-hard);color:var(--muted)}
+.lines td .cm{color:var(--muted);font-size:12.5px}
+@media (max-width:860px){ .sgtop{grid-template-columns:1fr} .conf{text-align:left} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="mast"><div class="mastin">
+  <div class="brand">
+    <svg viewBox="0 0 289 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Assemble"><path fill="currentColor" d="M216.997 23.5769C213.724 23.5769 213.12 28.7154 212.834 32.4031V42.0756C213.088 45.7028 213.533 51.325 217.092 51.325C220.174 51.325 220.968 44.6751 220.968 36.9371C220.968 28.4434 220.365 23.5467 216.997 23.5467M276.449 32.3728C276.544 27.7481 275.305 22.791 272.127 22.791C268.664 22.791 267.52 27.7481 267.456 32.3728H276.481H276.449ZM132.155 32.3728C132.25 27.7481 131.011 22.791 127.834 22.791C124.465 22.791 123.322 27.7481 123.226 32.3728H132.155ZM20.686 15.9295L16.7141 36.786L26.0877 36.786L22.3702 15.9295H20.686ZM159.641 22.398H160.182C162.056 18.6802 164.693 15.1738 169.396 15.1738C172.86 15.1738 175.402 17.2897 176.737 22.3375H177.277C179.12 18.6499 182.139 15.1738 186.841 15.1738C191.894 15.1738 195.866 18.529 195.866 29.3199V58.6095H184.013V29.1688C184.013 25.2998 183.568 23.6072 182.075 23.6072C180.232 23.6072 178.548 26.9622 177.753 32.7658V58.6095H166.505V29.1688C166.505 25.2998 166.155 23.6072 164.567 23.6072C162.724 23.6072 161.039 26.9622 160.213 32.7658V58.6095L148.456 58.6095V28.2318C148.456 24.4534 148.202 19.9799 147.662 15.9598L159.26 15.9598L159.705 22.4283L159.641 22.398ZM89.9887 46.6399C89.7345 49.5114 90.5926 52.4433 92.9122 52.4433C94.9458 52.4433 95.8357 50.5994 95.8357 48.5742C95.8357 45.8841 93.8018 44.131 90.4336 42.7708C83.5382 39.8992 77.2466 35.4559 77.2466 28.2015C77.2466 20.131 84.2375 14.8111 92.1814 14.8111C98.8225 14.8111 106.703 17.9245 107.402 27.2645L94.5646 27.2645C94.8188 24.0605 93.7702 21.7935 92.1814 21.7935C90.6879 21.7935 89.4487 23.2141 89.4487 25.9043C89.4487 28.4433 91.3871 30.1964 95.0095 31.5566C102.159 34.1561 108.355 38.2066 108.355 46.1864C108.355 54.8615 100.22 59.6373 92.785 59.6373C86.3345 59.6373 77.5643 56.524 76.8653 46.6096H89.9569L89.9887 46.6399ZM56.2747 46.6399C56.0205 49.5114 56.974 52.4433 59.2936 52.4433C61.3272 52.4433 62.2167 50.5994 62.2167 48.5742C62.2167 45.8841 60.1832 44.131 56.815 42.7708C49.8243 39.8992 43.5326 35.4559 43.5326 28.2015C43.5326 20.131 50.5232 14.8111 58.5624 14.8111C65.2036 14.8111 72.9886 17.9245 73.6877 27.2645H60.9456C61.1998 24.0605 60.1512 21.7935 58.5624 21.7935C57.069 21.7935 55.7347 23.2141 55.7347 25.9043C55.7347 28.4433 57.7681 30.1964 61.3905 31.5566C68.4765 34.1561 74.6729 38.2066 74.6729 46.1864C74.6729 54.8615 66.6337 59.6373 59.1982 59.6373C52.6524 59.6373 43.8822 56.524 43.1831 46.6096H56.2747V46.6399ZM267.234 39.7179C267.488 46.0352 268.282 52.4131 272.445 52.4131C274.669 52.4131 275.972 49.874 275.813 45.9445L288.206 45.9445C286.871 53.4407 280.77 60 272.096 60C262.023 60 254.682 50.7507 254.682 36.786C254.682 24.7558 261.927 14.66 272.286 14.66C283.948 14.66 289 25.7835 289 35.6978C289 36.6953 288.905 38.2066 288.746 39.7481L267.266 39.7481L267.234 39.7179ZM123.035 39.7179C123.29 46.0352 124.084 52.4131 128.151 52.4131C130.376 52.4131 131.679 49.874 131.52 45.9445H144.007C142.577 53.4407 136.477 60 127.802 60C117.793 60 110.452 50.7507 110.452 36.786C110.452 24.7558 117.697 14.66 127.961 14.66C139.654 14.66 144.77 25.7835 144.77 35.6978C144.77 36.6953 144.675 38.2066 144.516 39.7481H123.035V39.7179ZM237.428 58.4887V0L249.471 0L250.52 15.7481V58.4887L237.428 58.4887ZM212.039 58.4887H200.377C200.377 58.4887 200.632 54.2872 200.632 50.5693V0L212.675 0V15.8087C212.675 18.3477 212.484 20.8565 212.484 20.8565H213.025C214.868 17.5618 217.791 15.053 221.35 15.053C228.881 15.053 233.297 24.6347 233.297 36.6649C233.297 49.7833 228.436 59.3954 221.254 59.3954C217.886 59.3954 215.058 56.8866 212.929 53.1688H212.389L212.039 58.4584V58.4887ZM15.0299 46.5491L12.9007 58.4887H0L12.6467 0L29.8056 0L43.1513 58.4887H29.6148L27.5811 46.5491L15.0299 46.5491Z"/></svg>
+    <span class="div"></span><span class="unit">Cost Management</span>
+  </div>
+  <nav class="supers" role="tablist" id="supers"></nav>
+</div></div>
+
+<div class="wrap">
+  <div class="head">
+    <div>
+      <div class="eyebrow" id="eyebrow">—</div>
+      <h1 id="title">—</h1>
+      <p class="lede" id="lede">—</p>
+    </div>
+    <div class="stampbox"><b id="stampWhen">&mdash;</b><span id="stampWho">&mdash;</span></div>
+  </div>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="subs" role="tablist" id="subs"></div>
+  <div class="teamnote" id="teamnote" hidden></div>
+  <div class="bar" id="bar"></div>
+  <div id="body"></div>
+
+  <footer class="foot">
+    <div class="refresh" id="refreshNote" hidden><span class="dot"></span>
+      <div id="refreshBody"></div></div>
+    <span>Read from Forma on <span id="stampFull">&mdash;</span>. Amounts are AUD, excluding GST;
+      a negative figure is a credit back to the project.</span>
+    <span>Decisions taken here are <b>queued, not sent</b>. This page has no route to Autodesk —
+      approving commits money in someone's name, so it runs through Forma or through Claude with
+      the plugin, one record at a time.</span>
+  </footer>
+</div>
+
+<script id="payload" type="application/json">
+{
+"example": true,
+"me": "Your Name",
+"today": "2026-01-01",
+"refresh": {"task": "Refresh the Cost & Spend Desk", "when": "weekdays at 7:02am"},
+"projects": [
+ {"key": "exa", "name": "Example Project", "code": "EXA0000", "c": "00000000-0000-0000-0000-000000000000"}],
+"variations": [
+ {"p": "exa", "id": "00000000-0000-0000-0000-00000000a001", "tier": "sco", "num": "CV-01",
+  "name": "EXAMPLE ROW — an Approved Variation waiting on someone", "amt": 125000,
+  "status": "inReview", "due": "2025-12-01", "age": 31, "with": "Your Name", "step": "Project Lead",
+  "chain": ["Project Lead", "Head of Delivery"],
+  "done": [{"s": "Project Lead", "by": "Someone Else", "at": "3 Dec"}],
+  "docs": [{"n": "EXAMPLE — Variation Approval No. 1.pdf", "u": "exampleIdNotReal0000000"}],
+  "note": "Every row on this page is an example. Nothing here is Forma data."},
+ {"p": "exa", "id": "00000000-0000-0000-0000-00000000a002", "tier": "pco", "num": "CV-02",
+  "name": "EXAMPLE ROW — a Potential Variation, priced, not yet sent", "amt": -42000,
+  "status": "open", "with": null, "step": null, "chain": [], "done": [], "priced": true,
+  "novation": true},
+ {"p": "exa", "id": "00000000-0000-0000-0000-00000000a003", "tier": "sco", "num": "CV-03",
+  "name": "EXAMPLE ROW — queued here but settled elsewhere", "amt": 9500,
+  "status": "inReview", "due": "2025-11-01", "age": 61, "with": "Your Name", "step": "Project Lead",
+  "chain": ["Project Lead"], "done": [], "contra": "Superseded by a deed of variation"}],
+"contracts": [
+ {"p": "exa", "id": "00000000-0000-0000-0000-00000000b001", "code": "EXA0000-0001",
+  "name": "EXAMPLE ROW — a consultant agreement in review", "vendor": "Example Consultant Pty Ltd",
+  "abn": "00 000 000 000", "type": "3000-PROFESSIONAL FEES", "amt": 180000, "invoiced": 24000,
+  "status": "inReview", "due": "2025-12-15", "age": 17,
+  "with": "Head of Delivery — Someone Else", "step": "Head of Delivery",
+  "chain": ["Project Lead", "Head of Delivery", "Finance"],
+  "done": [{"s": "Project Lead", "by": "Your Name", "at": "12 Dec"}],
+  "scope": "EXAMPLE scope of work. Replace everything in this payload with real figures.",
+  "sov": [
+   {"code": "17000.00001", "name": "Example fee line", "amount": 180000,
+    "stages": [
+     {"code": "S1", "name": "Example stage one", "amount": 60000},
+     {"code": "S2", "name": "Example stage two", "amount": 120000}]}],
+  "ins": {"pi": 10000000, "pl": 20000000},
+  "bud": {"code": "17000.00001", "name": "Example budget line", "revised": 200000,
+          "committed": 180000, "spent": 24000, "queued": 180000, "queuedN": 1},
+  "docs": [{"n": "EXAMPLE — Consultant Agreement.pdf", "u": "exampleIdNotReal0000001"}],
+  "compliance": "pending", "locked": true},
+ {"p": "exa", "id": "00000000-0000-0000-0000-00000000b002", "code": "EXA0000-0002",
+  "name": "EXAMPLE ROW — a draft with no schedule of values", "vendor": null,
+  "type": "5000-CONSTRUCTION COSTS", "amt": 50000, "status": "draft", "with": null, "step": null,
+  "chain": [], "done": [], "sov": [],
+  "terminated": {"by": "Your Name", "at": "1 Dec 2025"}}],
+"invoices": [
+ {"p": "exa", "id": "00000000-0000-0000-0000-00000000c001", "num": "VENDBILL00000",
+  "entity": "Example Consultant Pty Ltd", "title": "EXAMPLE ROW — an invoice in review",
+  "ref": "INV-0000", "amt": 24000, "status": "inReview", "due": "2025-12-20", "age": 12,
+  "with": "Your Name", "step": "Project Lead", "chain": ["Project Lead", "Finance"], "done": [],
+  "contract": "EXA0000-0001",
+  "bud": {"code": "17000.00001", "name": "Example budget line", "revised": 200000,
+          "committed": 180000, "spent": 24000, "queued": 24000, "queuedN": 1},
+  "docs": [{"n": "EXAMPLE — invoice.pdf", "u": "exampleIdNotReal0000002"}]}]
+}
+</script>
+<script>
+const RAW = JSON.parse(document.getElementById('payload').textContent);
+const PROJ = RAW.projects, VARS = RAW.variations, CONS = RAW.contracts, INVS = RAW.invoices;
+const BASE = 'https://acc.aus.autodesk.com';
+/* TEAM MODE FAILS CLOSED.
+   On a personal desk ME is the person who built it. On a team desk it starts
+   NULL and is only set from whoever is actually viewing, because the failure
+   that matters is offering one person another person's approvals. */
+const TEAM = !!RAW.team;
+let ME = TEAM ? null : RAW.me;
+let MEID = null, CANWRITE = null;
+
+const money = v => v==null ? '—' : (v<0?'−':'')+'$'+Math.abs(Math.round(v)).toLocaleString('en-AU');
+const brief = v => v==null ? '—' : (v<0?'−':'')+(Math.abs(v)>=1e6?'$'+(Math.abs(v)/1e6).toFixed(2)+'m'
+  : Math.abs(v)>=1e3?'$'+Math.round(Math.abs(v)/1e3)+'k':'$'+Math.round(Math.abs(v)));
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const plural = (k,w) => k+' '+w+(k===1?'':'s');
+const projOf = k => PROJ.find(p=>p.key===k) || {name:k,code:'',c:''};
+
+/* Record deep links, verified against Forma on 18 Sep 2026 — none guessed:
+     variations  /cost/changeorder/…/changeorders/<tier>?preview=<id>
+     contracts   /cost/cost/…/contracts?preview=<id>
+     invoices    /cost/cost/…/expenses?preview=<id>                         */
+function linkOf(r){
+  const c = projOf(r.p).c;
+  if(r.tier) return `${BASE}/cost/changeorder/projects/${c}/changeorders/${r.tier}?preview=${r.id}`;
+  if(r.code) return `${BASE}/cost/cost/projects/${c}/contracts?preview=${r.id}`;
+  return `${BASE}/cost/cost/projects/${c}/expenses?preview=${r.id}`;
+}
+
+/* A DOCUMENT LINK, NOT THE DOCUMENT.
+   The page never carries a file — only its name and its lineage id, so a record
+   with five attachments costs five short strings.
+   Docs resolves a file from `entityId` ALONE; the folderUrn the UI puts in its
+   own links is not required, which is what makes this possible at all, since the
+   attachment record does not carry a Docs folder urn.
+   Attachment urns come in two forms and both reduce to the same id:
+     urn:adsk.<region>:fs.file:vf.<id>?version=N   (a healthy attachment)
+     urn:adsk.<region>:dm.lineage:<id>             (one made before §1 was fixed)
+   The lineage form is the one Forma cannot download — and the one Docs wants
+   here. Store the bare id and build the link. */
+const docHref = (r,u) =>
+  `${BASE}/docs/files/projects/${projOf(r.p).c}?entityId=`
+  + encodeURIComponent('urn:adsk.wipprodanz:dm.lineage:'+u);
+
+const I_DOC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>';
+const I_OUT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v9"/><path d="M10 14 21 3"/></svg>';
+
+function docsBlock(r){
+  const d = r.docs||[];
+  if(!d.length) return '';
+  const ext = n => (n.split('.').pop()||'').toUpperCase().slice(0,4);
+  return `<details class="drop"><summary><span class="caret">▸</span>${I_DOC}
+      ${plural(d.length,'document')}</summary>
+    <div class="dropbody"><div class="files">${d.map(f=>
+      `<a class="file" href="${docHref(r,f.u)}" target="_blank" rel="noopener">
+        ${I_DOC}<span class="fn">${esc(f.n)}</span><span class="ext">${esc(ext(f.n))}</span></a>`
+      ).join('')}</div></div></details>`;
+}
+
+/* All of the viewer's name tokens must appear in the step's assignee. The
+   claude.ai profile name and Forma's spelling are two different records of the
+   same person, so an exact substring was too strict. */
+const isMine = r => {
+  if(!ME || !r.with) return false;
+  const hay = String(r.with).toLowerCase();
+  const parts = String(ME).toLowerCase().split(/[^a-z0-9']+/).filter(t=>t.length>1);
+  return parts.length > 0 && parts.every(t => hay.includes(t));
+};
+const isOld  = r => (r.age||0) >= 90;
+const isContra = r => !!r.contra;
+
+function blocksOf(c){
+  const out=[];
+  if(c.status==='draft' || c.status==='submitted'){
+    if(!c.vendor) out.push({t:'No vendor set',red:true});
+    if(c.amt==null) out.push({t:'No contract value',red:true});
+    if(c.invoiced) out.push({t:'Invoiced '+money(c.invoiced)+' against a draft',red:true});
+    if(!c.type) out.push({t:'No contract type'});
+    if(!c.sov || !c.sov.length) out.push({t:'No schedule of values'});
+  } else if(c.invoiced && c.status!=='executed'){
+    out.push({t:'Invoiced '+money(c.invoiced)+' — not executed',red:true});
+  }
+  if(c.bud && c.bud.committed!=null){
+    const head=(c.bud.revised==null?0:c.bud.revised)-c.bud.committed;
+    if(head<0) out.push({t:'Budget line over by '+money(Math.abs(head)),red:true});
+  }
+  if(c.compliance==='pending') out.push({t:'Compliance pending'});
+  if(c.locked) out.push({t:'NetSuite mid-sync'});
+  return out;
+}
+const isBlocked = c => blocksOf(c).some(b=>b.red);
+
+function ageBadge(r){
+  if(r.age==null) return '';
+  const k=r.age>=90?'late':r.age>=30?'soon':'ok';
+  return `<div class="age ${k}">${plural(r.age,'day')} overdue</div>`;
+}
+
+function chainStrip(r){
+  if(!r.chain || !r.chain.length){
+    const label=r.step || (r.status==='open'?'Open — no approval running':'Not in an approval');
+    return `<div class="chain"><div class="chain-note">
+      <span class="verdict none">${esc(label)}</span>
+      ${r.terminated?`<span>sent back by <b>${esc(r.terminated.by)}</b>, ${esc(r.terminated.at)}</span>`:''}
+      ${r.note?`<span>${esc(r.note)}</span>`:''}</div></div>`;
+  }
+  const cells=r.chain.map(step=>{
+    const d=(r.done||[]).find(x=>x.s===step);
+    if(d) return `<div class="step done"><span class="nm">${esc(step)}</span>
+      <span class="by">${esc(d.by)}${d.at&&d.at!=='done'?' · '+esc(d.at):''}</span></div>`;
+    const current = step===r.step || (r.chain.length===1 && r.with);
+    if(current) return `<div class="step now ${isOld(r)?'hot':''}"><span class="nm">${esc(step)}</span>
+      <span class="by">${r.with?esc(String(r.with).split(';')[0]):'not yet sent'}</span></div>`;
+    return `<div class="step todo"><span class="nm">${esc(step)}</span>
+      <span class="by">not reached</span></div>`;
+  }).join('');
+  const v=r.age==null?'none':r.age>=90?'over':r.age>=30?'tight':'clear';
+  const vl=r.age==null?(r.step||'—'):plural(r.age,'day')+' overdue';
+  const doneN=(r.done||[]).length;
+  return `<div class="chain"><div class="steps">${cells}</div>
+    <div class="chain-note">
+      ${r.due?`<span>Review due <b>${esc(r.due)}</b></span>`:''}
+      ${doneN?`<span><b>${doneN}</b> of ${r.chain.length} signed off</span>`:''}
+      <span class="spacer"></span><span class="verdict ${v}">${esc(vl)}</span></div></div>`;
+}
+
+/* One budget track, used by contracts and invoices.
+   For an invoice the binding constraint is whichever of budget and commitment is
+   LOWER: an invoice can sit inside a generous commitment and still break its
+   budget line. For a contract the revised budget is the line that matters. */
+function budgetTrack(r,mine,kind){
+  const b=r.bud; if(!b) return '';
+  const spent=b.spent||0;
+  let cap=b.revised, capName='Budget';
+  if(kind==='invoice' && b.committed!=null && b.revised!=null && b.committed<b.revised){
+    cap=b.committed; capName='Commitment';
+  }
+  const others = kind==='invoice' ? Math.max(0,(b.queued||mine)-mine)
+                                  : Math.max(0,(b.committed||0)-mine);
+  const after = spent+mine+others;
+  const top=Math.max(cap||0,after,b.projected||0)*1.08 || 1;
+  const pc=v=>(Math.max(v,0)/top*100).toFixed(2)+'%';
+  const head=(cap==null?0:cap)-(kind==='invoice'?after:(b.committed||0));
+  const k = cap==null?'over' : head<0?'over' : head<cap*0.05?'tight':'clear';
+  const label = cap==null?'No budget on this line'
+    : head<0?(kind==='invoice'?'Line over if all approved':'Line over')+' by '+money(Math.abs(head))
+    : 'Headroom '+money(head);
+  return `<div class="chain" style="border-top:1px solid var(--rule)">
+    <div class="track" role="img" aria-label="Spent ${money(spent)} of ${money(cap)}; this record ${money(mine)}">
+      ${spent?`<span class="seg spent" style="left:0;width:${pc(spent)}"></span>`:''}
+      <span class="seg this" style="left:${pc(spent)};width:${pc(mine)}"></span>
+      ${others>0?`<span class="seg other" style="left:${pc(spent+mine)};width:${pc(others)}"></span>`:''}
+      ${cap!=null?`<span class="mark ${head<0?'hot':''}" style="left:${pc(cap)}"
+        data-l="${capName} ${brief(cap)}"></span>`:''}
+    </div>
+    <div class="legend">
+      <span><b>${esc(b.code)}</b> ${esc(b.name)}</span>
+      ${spent?`<span><i style="background:var(--ink);opacity:.42"></i>Spent <b>${money(spent)}</b></span>`:''}
+      <span><i style="background:var(--blue)"></i>This ${kind==='invoice'?'invoice':'contract'}
+        <b>${money(mine)}</b></span>
+      ${others>0?`<span><i style="background:var(--blue);opacity:.32"></i>${
+        kind==='invoice'?(b.queuedN-1)+' more queued':'Other commitments'} <b>${money(others)}</b></span>`:''}
+      ${b.pending?`<span>Transfers pending <b>${money(b.pending)}</b></span>`:''}
+      <span class="spacer"></span><span class="verdict ${k}">${esc(label)}</span></div></div>`;
+}
+
+function sovBlock(c){
+  const rows=c.sov||[];
+  if(!rows.length && !c.scope && !c.ins) return '';
+  const total=rows.reduce((t,l)=>t+(l.amount||0),0);
+  let body = c.scope?`<p class="scope">${esc(c.scope)}</p>`:'';
+  if(rows.length){
+    body += `<div class="tscroll"><table class="sovtable"><thead><tr>
+      <th>Code</th><th>Line</th><th class="r">Amount</th></tr></thead><tbody>`;
+    for(const l of rows){
+      body += `<tr><td>${esc(l.code)}</td><td>${esc(l.name)}</td><td class="r">${money(l.amount)}</td></tr>`;
+      for(const s of (l.stages||[]))
+        body += `<tr class="stage"><td>${esc(s.code)}</td><td>${esc(s.name)}</td>
+          <td class="r">${money(s.amount)}</td></tr>`;
+    }
+    body += `<tr class="total"><td></td><td>Contract sum</td>
+      <td class="r">${money(total||c.amt)}</td></tr></tbody></table></div>`;
+    if(rows.some(l=>(l.stages||[]).length))
+      body += `<p class="scope" style="margin:10px 0 0;font-size:12px">Fee stages sum to their line
+        rather than adding to it.</p>`;
+  } else {
+    body += `<p class="scope">No schedule of values on this contract. Nothing can be claimed
+      against it until one exists.</p>`;
+  }
+  if(c.ins) body += `<div class="ins">
+    <span>Professional indemnity not less than <b>${money(c.ins.pi)}</b></span>
+    <span>Public liability not less than <b>${money(c.ins.pl)}</b></span>
+    ${c.abn?`<span>ABN <b>${esc(c.abn)}</b></span>`:''}</div>`;
+  return `<details class="drop"><summary><span class="caret">▸</span>
+    Schedule of values &amp; scope — ${rows.length?plural(rows.length,'line'):'no lines'}</summary>
+    <div class="dropbody">${body}</div></details>`;
+}
+
+let DB=null, STATE={};
+const LS='cvdesk-decisions';
+try{ STATE=JSON.parse(localStorage.getItem(LS)||'{}'); }catch(e){ STATE={}; }
+function persist(key,val){
+  if(val && !val.by){ val.by = ME || 'someone unidentified'; val.byId = MEID; }
+  if(val===null) delete STATE[key]; else STATE[key]=val;
+  try{ localStorage.setItem(LS,JSON.stringify(STATE)); }catch(e){}
+  if(DB){ const d=DB.doc('decisions/'+key); (val===null?d.delete():d.set(val)).catch(()=>{}); }
+  render();
+}
+(async()=>{
+  try{ DB=await window.claude?.use?.('db') ?? null; }catch(e){ DB=null; }
+  if(DB){ try{ DB.collection('decisions').onSnapshot(s=>{
+    let ch=false;
+    (s.docs||[]).forEach(doc=>{const v=doc.data?.(), id=doc.id; if(id&&v){STATE[id]=v;ch=true;}});
+    if(ch) render();}, ()=>{}); }catch(e){}
+    scoutSubscribe(); }
+  else { SCOUT='off'; render(); }
+  try{ const u=await window.claude?.use?.('user') ?? null;
+    if(u){
+      const me=await u.me();
+      if(me&&me.name) ME=me.name;
+      OWNER = me ? !!me.isOwner : null;
+      try{ MEID=await u.id(); }catch(e){}
+      /* null means "not told" - keep the buttons; only an explicit false
+         hides them, per the capability's own contract. */
+      try{ const w=u.can?await u.can('data.write'):null; CANWRITE=(w===undefined?null:w); }catch(e){}
+      render();
+    } }catch(e){}
+})();
+
+function actions(r){
+  const key=r.id, d=STATE[key];
+  if(d) return `<div class="queued ${d.response==='revise'?'rev':''}">
+    <b>${d.response==='approve'?'Queued to approve':'Queued to send back'}</b>
+    ${d.by?`<span>by <b>${esc(d.by)}</b></span>`:''}
+    <span>${d.comment?'“'+esc(d.comment)+'”':'no comment'}</span>
+    <span class="spacer"></span>
+    <button class="undo" data-undo="${esc(key)}">Undo</button></div>`;
+  if(!isMine(r) || CANWRITE===false) return '';
+  return `<div class="acts">
+    <button class="btn ok" data-do="approve" data-k="${esc(key)}">Approve my step</button>
+    <button class="btn back" data-do="revise" data-k="${esc(key)}">Send back</button>
+    <a class="btn" href="${linkOf(r)}" target="_blank" rel="noopener">${I_OUT} Open in Forma</a>
+    <span class="note">Queued here, then run in Forma or by Claude. Sending back needs a comment.
+      <b>Reject is not available</b> — its wire value was never verified.</span>
+    <textarea class="cmt" id="cmt-${esc(key)}" placeholder="Comment — required to send back"></textarea>
+  </div>`;
+}
+
+function varCard(r){
+  const tier=r.tier==='sco'?'Approved Variation':r.tier==='rfq'?'Submitted Variation':'Potential Variation';
+  const amtLbl=r.tier==='pco'?(r.priced?'Priced':'Estimate'):'Committed';
+  return `<article class="rec ${isMine(r)?'mine':''} ${isContra(r)?'contra':isOld(r)?'stale':''}">
+    <div class="top">
+      <div class="who">
+        <div class="vb">${esc(r.num)} · ${tier}${r.novation?' · Deed of Novation':''}</div>
+        <div class="ent">${esc(r.name)}</div>
+        ${r.contra?`<div class="desc" style="color:var(--tight);font-weight:600">${esc(r.contra)}</div>`
+          :r.note?`<div class="desc">${esc(r.note)}</div>`:''}
+      </div>
+      <div><div class="lbl">Status</div>
+        <div class="due">${esc(r.status==='inReview'?'In review':r.status)}</div>${ageBadge(r)}</div>
+      <div><div class="${r.amt!=null&&r.amt<0?'amt credit':'amt'}">${money(r.amt)}
+        <small>${amtLbl}</small></div></div>
+      <div class="withwho"><span class="lbl">With</span>
+        ${r.with?`<b>${esc(r.with)}</b>`:'<span>no one — not in an approval</span>'}</div>
+    </div>
+    ${chainStrip(r)}${docsBlock(r)}${actions(r)}</article>`;
+}
+
+function conCard(c){
+  const blocks=blocksOf(c);
+  return `<article class="rec ${isMine(c)?'mine':''} ${isBlocked(c)?'contra':isOld(c)?'stale':''}">
+    <div class="top">
+      <div class="who">
+        <div class="vb">${esc(c.code)}${c.type?' · '+esc(c.type):''}</div>
+        <div class="ent">${esc(c.name)}</div>
+        <div class="desc">${c.vendor?esc(c.vendor)
+          :'<span style="color:var(--over);font-weight:600">no vendor set</span>'}</div>
+      </div>
+      <div><div class="lbl">Status</div>
+        <div class="due">${esc(c.status==='inReview'?'In review':c.status==='revise'?'Sent back':c.status)}</div>
+        ${ageBadge(c)}</div>
+      <div><div class="amt">${money(c.amt)}
+        <small>${c.invoiced?'Invoiced '+brief(c.invoiced):'Contract value'}</small></div></div>
+      <div class="withwho"><span class="lbl">With</span>
+        ${c.with?`<b>${esc(c.with)}</b>`:c.status==='sent'?'<b>ready to execute</b>'
+          :c.terminated?'<span>sent back</span>':'<span>no one — still a draft</span>'}</div>
+    </div>
+    ${chainStrip(c)}${budgetTrack(c,c.amt||0,'contract')}${docsBlock(c)}${sovBlock(c)}
+    ${blocks.length?`<div class="blocks">${blocks.map(b=>
+      `<span class="blk ${b.red?'red':''}">${esc(b.t)}</span>`).join('')}</div>`:''}
+    ${actions(c)}</article>`;
+}
+
+function invCard(r){
+  return `<article class="rec ${isMine(r)?'mine':''} ${isOld(r)?'stale':''}">
+    <div class="top">
+      <div class="who">
+        <div class="vb">${esc(r.num)}${r.contract?' · against '+esc(r.contract):''}</div>
+        <div class="ent">${esc(r.entity)}</div>
+        <div class="desc">${esc(r.title)} · ${esc(r.ref)}</div>
+      </div>
+      <div><div class="lbl">Status</div>
+        <div class="due">${esc(r.status==='inReview'?'In review':'Sent back')}</div>${ageBadge(r)}</div>
+      <div><div class="amt">${money(r.amt)}<small>Invoiced</small></div></div>
+      <div class="withwho"><span class="lbl">With</span>
+        ${r.with?`<b>${esc(r.with)}</b>`:'<span>no one — back with the raiser</span>'}</div>
+    </div>
+    ${budgetTrack(r,r.amt||0,'invoice')}${chainStrip(r)}${docsBlock(r)}${actions(r)}</article>`;
+}
+
+/* ---------------- summaries ---------------- */
+function tilesFor(set,kind){
+  const inApp=set.filter(r=>r.with), mine=inApp.filter(isMine);
+  const oldest=inApp.slice().sort((a,b)=>(b.age||0)-(a.age||0))[0];
+  const contra=set.filter(isContra);
+  const t=[['With you',mine.length,mine.length
+      ?'oldest '+plural(Math.max(...mine.map(r=>r.age||0)),'day')+' overdue':'nothing in your name',
+      mine.length?'alert':''],
+    ['In an approval',inApp.length,inApp.length?'net '+brief(inApp.reduce((a,r)=>a+(r.amt||0),0)):'none',''],
+    ['Longest wait',(oldest?.age||0)+' days',oldest?esc(oldest.num||oldest.code):'—',
+      oldest&&oldest.age>=90?'alert':'']];
+  if(kind==='contract'){
+    const ghost=set.filter(c=>c.invoiced && c.status!=='executed');
+    t.push(['Invoiced, not executed',brief(ghost.reduce((a,c)=>a+(c.invoiced||0),0)),
+      plural(ghost.length,'contract'),ghost.length?'alert':'']);
+    t.push(['Already dealt with',contra.length,contra.length?'still in a live queue':'none',
+      contra.length?'warn':'']);
+  } else if(kind==='invoice'){
+    const risk=set.filter(r=>{const b=r.bud;if(!b)return false;
+      const cap=Math.min(b.revised??Infinity,b.committed??Infinity);
+      return (b.spent||0)+(b.queued||r.amt||0)>cap;});
+    t.push(['Lines over if all approved',risk.length,
+      risk.length?'across '+plural(new Set(risk.map(r=>r.bud.code)).size,'budget line'):'none',
+      risk.length?'alert':'']);
+    t.push(['Sent back to revise',set.filter(r=>r.status==='revise').length,
+      brief(set.filter(r=>r.status==='revise').reduce((a,r)=>a+(r.amt||0),0)),'']);
+  } else {
+    const credits=set.filter(r=>r.with&&(r.amt||0)<0);
+    t.push(['Credits unapproved',brief(credits.reduce((a,r)=>a+(r.amt||0),0)),
+      plural(credits.length,'record')+' owed back',credits.length?'warn':'']);
+    t.push(['Already dealt with',contra.length,contra.length?'still in a live queue':'none',
+      contra.length?'warn':'']);
+  }
+  return `<div class="tiles">${t.map(([k,v,s,cls])=>
+    `<div class="tile ${cls}"><div class="k">${esc(k)}</div><div class="v num">${v}</div>
+     <div class="s">${s}</div></div>`).join('')}</div>`;
+}
+
+function ageingPanel(set){
+  const inApp=set.filter(r=>r.with&&r.age!=null);
+  if(!inApp.length) return '';
+  const bands=[['120 days or more',r=>r.age>=120],['90 – 119 days',r=>r.age>=90&&r.age<120],
+    ['60 – 89 days',r=>r.age>=60&&r.age<90],['30 – 59 days',r=>r.age>=30&&r.age<60],
+    ['Under 30 days',r=>r.age<30]];
+  const rows=bands.map(([label,f])=>{const s=inApp.filter(f);
+    return {label,n:s.length,sum:s.reduce((t,r)=>t+Math.abs(r.amt||0),0)};});
+  const max=Math.max(...rows.map(r=>r.n),1);
+  return `<section class="sect"><h3>How long things have been sitting</h3>
+    <p class="sub2">Days past the review date Forma set. The approval rules themselves are not
+      readable through the API, so this is where each record has got to — not why that chain
+      applies to it.</p>
+    <div class="panel"><div class="bars">${rows.map(r=>{
+      const cls=/120|90/.test(r.label)?'bad':/60/.test(r.label)?'warn':'';
+      return `<div class="brow"><span>${esc(r.label)}</span>
+        <span class="bwrap"><span class="bfill ${cls}" style="width:${Math.max(r.n/max*100,2)}%"></span></span>
+        <span class="cap">${r.n} · ${brief(r.sum)}</span></div>`;}).join('')}</div></div></section>`;
+}
+
+function pressurePanel(set,kind){
+  const byLine={};
+  for(const r of set){
+    if(!r.bud || r.bud.committed==null && r.bud.revised==null) continue;
+    const k=r.p+'|'+r.bud.code;
+    (byLine[k]=byLine[k]||{bud:r.bud,p:r.p,recs:[]}).recs.push(r);
+  }
+  const rows=Object.values(byLine).filter(g=>{
+    const cap=kind==='invoice'?Math.min(g.bud.revised??Infinity,g.bud.committed??Infinity):g.bud.revised;
+    const used=kind==='invoice'?(g.bud.spent||0)+(g.bud.queued||0):(g.bud.committed||0);
+    return g.recs.length>1 || used>(cap==null?0:cap);});
+  if(!rows.length) return '';
+  return `<section class="sect"><h3>Budget lines under pressure</h3>
+    <p class="sub2">Lines where more than one record is queued against the same budget, or where
+      what is already used exceeds it. Each record reads as affordable on its own and still breaks
+      its line once the others alongside it go through.</p>
+    <div class="panel"><div class="tscroll"><table class="lines"><thead><tr>
+      <th>Budget line</th><th>Queued on it</th><th class="r">Budget</th>
+      <th class="r">${kind==='invoice'?'Spent + queued':'Committed'}</th><th class="r">Headroom</th>
+      </tr></thead><tbody>${rows.map(g=>{
+        const cap=kind==='invoice'?Math.min(g.bud.revised??Infinity,g.bud.committed??Infinity):g.bud.revised;
+        const used=kind==='invoice'?(g.bud.spent||0)+(g.bud.queued||0):(g.bud.committed||0);
+        const head=(cap==null||cap===Infinity?0:cap)-used;
+        return `<tr>
+          <td><b>${esc(g.bud.code)}</b><br><span style="color:var(--muted)">${esc(g.bud.name)}</span>
+            <br><span style="color:var(--faint);font-size:12px">${esc(projOf(g.p).code)}</span></td>
+          <td>${g.recs.map(r=>esc(r.code||r.num)+' '+esc(r.name||r.entity)+' — '+money(r.amt)
+            +' <span style="color:var(--faint)">('+esc(r.status)+')</span>').join('<br>')}</td>
+          <td class="r">${cap==null||cap===Infinity?'<span style="color:var(--over)">none</span>':money(cap)}</td>
+          <td class="r">${money(used)}</td>
+          <td class="r ${head<0?'bad':''}">${money(head)}</td></tr>`;}).join('')}
+      </tbody></table></div></div></section>`;
+}
+
+function flagsFor(set,kind){
+  const out=[];
+  if(kind==='contract'){
+    const ghost=set.filter(c=>c.invoiced&&c.status!=='executed');
+    if(ghost.length) out.push(`<div class="flag"><span class="mk">!</span><div>
+      <p><b>${money(ghost.reduce((a,c)=>a+(c.invoiced||0),0))} has been invoiced against
+      ${plural(ghost.length,'contract')} Forma does not show as executed.</b></p>
+      <p>${ghost.map(c=>esc(c.code)+' — '+money(c.invoiced)
+        +(c.amt==null?' against no contract value at all':'')).join(' · ')}.
+      Either the contract never finished its approval, or the invoices were coded to the wrong
+      commitment. Both are worth knowing.</p></div></div>`);
+  }
+  if(kind==='variation'){
+    const credits=set.filter(r=>r.with&&(r.amt||0)<0);
+    if(credits.length) out.push(`<div class="flag amber"><span class="mk">!</span><div>
+      <p><b>${money(credits.reduce((a,r)=>a+(r.amt||0),0))} of credits are sitting unapproved.</b></p>
+      <p>${plural(credits.filter(r=>r.novation).length,'Deed of Novation')} plus
+      ${plural(credits.filter(r=>!r.novation).length,'other credit')}. Money owed back to the
+      project that has not been recognised — the same delay that costs on a payable costs twice on
+      a receivable.</p></div></div>`);
+  }
+  if(kind==='invoice'){
+    const late=set.filter(r=>(r.age||0)>=90);
+    if(late.length) out.push(`<div class="flag"><span class="mk">!</span><div>
+      <p><b>${plural(late.length,'invoice')} more than 90 days past its review date.</b></p>
+      <p>${late.map(r=>esc(r.num)+' '+esc(r.entity)+' — '+money(r.amt)+', '
+        +plural(r.age,'day')+' overdue').join(' · ')}. A supplier is waiting on each of these.</p>
+      </div></div>`);
+  }
+  const contra=set.filter(isContra);
+  if(contra.length) out.push(`<div class="flag amber"><span class="mk">?</span><div>
+    <p><b>${contra.length} records are queued for decisions already taken elsewhere.</b></p>
+    <p>${contra.map(r=>esc(r.num||r.code)+' — '+esc(r.contra)).join(' · ')}.
+    Each reads as waiting on a decision that has in fact been made. Voiding them clears
+    ${contra.length} items without approving anything.</p></div></div>`);
+  return out.join('');
+}
+
+/* ---------------- next steps: scout-bot's suggested moves ----------------
+   Not part of the payload, so a desk refresh never touches it.
+     suggestions/<id>   scout-bot: one suggested move and its evidence
+     nextsteps/<id>     the owner's call on it - proceed or hold, with a
+                        comment - and, once Claude has carried it out, `result`
+     scoutrun/latest    scout-bot: when it last ran and what it read
+   All three are OWNER-ONLY by db rule: the evidence comes from a personal
+   mailbox, and a shared desk is not a privacy boundary. The tab is hidden
+   from anyone else.
+   Nothing here changes Forma. Proceed queues a move; Claude carries it out
+   only when the owner asks it to process the queue, confirming each write in
+   the conversation. Hold keeps it, and the comment tells the scout what to
+   wait for; when the scout sees it, it writes `update` on the suggestion and
+   the card comes back to "To decide". */
+let SUGS=[], NEXT={}, RUN=null, SCOUT='waiting', OWNER=null;
+const DRAFT={};
+const STAGE={draft:'Draft',pending:'Pending Vendor Input',submitted:'Submitted',
+  revise:'Revise & Resubmit',inReview:'In Review',sent:'Sent',executed:'Executed',closed:'Closed'};
+const ORDER={draft:0,pending:1,submitted:2,revise:2,inReview:3,sent:4,executed:5,closed:6};
+const FAMILY={contract:'Contract',variation:'Variation',expense:'Expense'};
+const CONF={high:0,medium:1,low:2};
+const I_MAIL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>';
+const I_ACX='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg>';
+
+const isoToday=()=>{const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+const daysSince=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s||''); if(!m) return null;
+  return Math.max(0,Math.floor((Date.now()-new Date(+m[1],m[2]-1,+m[3]).getTime())/864e5));};
+const shortDate=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s||'');
+  return m?`${+m[3]} ${MONTHS[+m[2]-1].slice(0,3)}`:(s||'—');};
+const safeUrl=u=>/^https:\/\//i.test(String(u||''));
+
+/* Where a suggestion sits. A hold comes back to "decide" when the scout has
+   written an update newer than the hold. */
+function stateOf(s){
+  const d=NEXT[s.id];
+  if(s.closed || (d&&d.result)) return 'log';
+  if(d&&d.decision==='proceed') return 'proceed';
+  if(d&&d.decision==='hold')
+    return s.update && String(s.update.at||'')>String(d.at||'') ? 'decide' : 'hold';
+  return 'decide';
+}
+const inState=k=>SUGS.filter(s=>stateOf(s)===k);
+
+function scoutSubscribe(){
+  const dead=()=>{SCOUT='off'; render();};
+  try{
+    DB.collection('suggestions').onSnapshot(s=>{
+      SUGS=(s.docs||[]).filter(d=>d.exists!==false)
+        .map(d=>Object.assign({},d.data()||{},{id:d.id}));
+      SCOUT='ready'; render();}, dead);
+    DB.collection('nextsteps').onSnapshot(s=>{
+      const n={}; (s.docs||[]).forEach(d=>{const v=d.data?.(); if(v) n[d.id]=v;});
+      NEXT=n; render();}, ()=>{});
+    DB.doc('scoutrun/latest').onSnapshot(d=>{RUN=d.exists?d.data():null; render();}, ()=>{});
+  }catch(e){ dead(); }
+}
+
+/* A contract suggestion is stale once the desk's own read shows the record at
+   or past the suggested stage. Variations change record (and id) at each tier,
+   so they are not matched this way. */
+function movedAlready(s){
+  if(s.family!=='contract' || ORDER[s.toStatus]==null) return null;
+  const c=CONS.find(x=>(s.rid&&x.id===s.rid)||(s.ref&&x.code===s.ref));
+  if(!c || ORDER[c.status]==null) return null;
+  return ORDER[c.status]>=ORDER[s.toStatus] ? c : null;
+}
+
+function sugLink(s){
+  if(!s.rid || !projOf(s.p).c) return '';
+  if(s.family==='contract') return linkOf({p:s.p,id:s.rid,code:s.ref||'contract'});
+  if(s.family==='variation') return linkOf({p:s.p,id:s.rid,tier:s.tier||'pco'});
+  return linkOf({p:s.p,id:s.rid});
+}
+
+/* The source, and a link to it when the scout recorded one. Only https links
+   are made clickable. */
+function srcLine(s){
+  const src=s.src||{};
+  const kind=src.kind==='aconex'?'Aconex':src.kind==='email'?'Email':'Source';
+  const bits=[src.who,src.date?shortDate(src.date):'',src.ref].filter(Boolean).map(esc).join(' · ');
+  const files=(src.files||[]).filter(f=>f&&f.n);
+  return `<div class="evid"><span class="src">${src.kind==='aconex'?I_ACX:I_MAIL}<b>${kind}</b></span>
+    <span>${bits||'no source recorded'}</span>
+    ${src.subject?`<span class="subj">“${esc(src.subject)}”</span>`:''}
+    ${safeUrl(src.url)?`<a class="srclink" href="${esc(src.url)}" target="_blank" rel="noopener">${I_OUT}
+      ${src.kind==='aconex'?'Open in Aconex':'Open the email'}</a>`:''}
+    ${s.quote?`<blockquote>${esc(s.quote)}</blockquote>`:''}
+    ${files.length?`<div class="sfiles">${files.map(f=>safeUrl(f.url)
+      ?`<a class="sfile" href="${esc(f.url)}" target="_blank" rel="noopener">${I_DOC}${esc(f.n)}</a>`
+      :`<span class="sfile" title="No link recorded">${I_DOC}${esc(f.n)}</span>`).join('')}</div>`:''}
+  </div>`;
+}
+
+function footOf(s,st,d,href){
+  const k=esc(s.id);
+  if(st==='decide') return `<div class="decide">
+      <textarea class="cmt" id="nxc-${k}" aria-label="Comment on this suggestion"
+        placeholder="Comment (optional). With Proceed: anything Claude should do differently. With Hold: what has to happen first. The scout watches for it.">${esc(DRAFT['nxc-'+s.id]||'')}</textarea>
+      <div class="row">
+        <button class="btn ok" data-nx="proceed" data-k="${k}">Proceed</button>
+        <button class="btn back" data-nx="hold" data-k="${k}">Hold</button>
+        ${href?`<a class="btn" href="${href}" target="_blank" rel="noopener">${I_OUT} Open in Forma</a>`:''}
+        <span class="note" id="nxmsg-${k}">Proceed queues it for Claude. Forma changes only when
+          you ask Claude to process the queue, and it checks each step with you first.</span>
+      </div></div>`;
+  if(st==='proceed') return `<div class="queued"><b>Proceeding</b>
+      <span>queued for Claude ${esc(shortDate(d.at))}</span>
+      ${d.comment?`<span class="cm">“${esc(d.comment)}”</span>`:'<span>no comment</span>'}
+      <span class="spacer"></span><button class="undo" data-nx="undo" data-k="${k}">Change</button></div>`;
+  if(st==='hold') return `<div class="queued rev"><b>On hold</b><span>since ${esc(shortDate(d.at))}</span>
+      ${d.comment?`<span>the scout is watching for: <span class="cm">“${esc(d.comment)}”</span></span>`
+        :'<span>no reason given, so the scout has nothing to watch for</span>'}
+      <span class="spacer"></span><button class="undo" data-nx="undo" data-k="${k}">Change</button></div>`;
+  if(d&&d.result) return `<div class="queued"><b>Done</b>
+      <span>${esc(shortDate(d.result.at))}${d.result.by?' by '+esc(d.result.by):''}</span>
+      ${d.result.note?`<span class="cm">${esc(d.result.note)}</span>`:''}</div>`;
+  return `<div class="queued fin"><b>Closed by the scout</b>
+      <span>${esc(shortDate(s.closed&&s.closed.at))}</span>
+      ${s.closed&&s.closed.note?`<span class="cm">${esc(s.closed.note)}</span>`:''}</div>`;
+}
+
+function sugCard(s){
+  const p=projOf(s.p), moved=movedAlready(s), href=sugLink(s), d=NEXT[s.id], st=stateOf(s);
+  const conf=s.conf==='high'?'clear':s.conf==='medium'?'tight':'none';
+  const age=daysSince(s.found);
+  const reopened = st==='decide' && d && d.decision==='hold';
+  const code = s.ref&&p.code&&String(s.ref).startsWith(p.code) ? '' : esc(p.code||s.p)+' · ';
+  return `<article class="rec sug">
+    <div class="sgtop">
+      <div class="who">
+        <div class="vb">${code}${s.ref?esc(s.ref):'New record'} · ${esc(FAMILY[s.family]||s.family||'—')}</div>
+        <div class="ent">${esc(s.name||'Unnamed record')}</div>
+        ${s.why?`<div class="desc">${esc(s.why)}</div>`:''}
+      </div>
+      <div><div class="lbl">Suggested move</div>
+        <div class="hop"><span class="stg">${esc(s.from||'—')}</span><span class="arw" aria-hidden="true">→</span>
+          <span class="stg to">${esc(s.to||'—')}</span></div>
+        ${s.skill?`<div class="skl">Next skill <code>${esc(s.skill)}</code></div>`:''}</div>
+      <div class="conf"><span class="verdict ${conf}">${esc((s.conf||'unrated')+' confidence')}</span>
+        <div class="age ok">Found ${esc(shortDate(s.found))}${age==null?'':age===0?' · today':' · '+plural(age,'day')+' ago'}</div></div>
+    </div>
+    ${srcLine(s)}
+    ${reopened?`<div class="hist">You held this on ${esc(shortDate(d.at))}${d.comment?': “'+esc(d.comment)+'”':''}</div>`:''}
+    ${s.update?`<div class="hist upd"><b>Scout update ${esc(shortDate(s.update.at))}.</b> ${esc(s.update.note||'')}</div>`:''}
+    ${moved&&st!=='log'?`<div class="blocks"><span class="blk">Forma already shows ${esc(STAGE[moved.status]||moved.status)}
+      as read ${esc(shortDate(RAW.today))}. Check before proceeding.</span></div>`:''}
+    ${footOf(s,st,d,href)}</article>`;
+}
+
+function nextTiles(){
+  const dec=inState('decide'), pro=inState('proceed'), hold=inState('hold');
+  const oldest=dec.length?Math.max(...dec.map(s=>daysSince(s.found)||0)):0;
+  const runAge=RUN?daysSince(RUN.at):null;
+  const read=RUN?(RUN.sources||[]).map(x=>x==='aconex'?'Aconex':x==='email'?'email':x).join(' and '):'';
+  const missed=RUN&&RUN.missing&&RUN.missing.length?'not read: '+RUN.missing.join(', '):'';
+  const t=[
+    ['To decide',dec.length,dec.length?'oldest found '+(oldest===0?'today':plural(oldest,'day')+' ago'):'nothing waiting',''],
+    ['Proceeding',pro.length,pro.length?'waiting for you to ask Claude':'nothing queued',''],
+    ['On hold',hold.length,hold.length?'the scout watches for each':'none',''],
+    ['Last scout run',RUN?shortDate(RUN.at):'—',
+      RUN?[read?'read '+read:'',missed].filter(Boolean).join(' · ')||'run recorded':'no run recorded yet',
+      runAge!=null&&runAge>3?'warn':'']];
+  return `<div class="tiles">${t.map(([k,v,s,cls])=>
+    `<div class="tile ${cls}"><div class="k">${esc(k)}</div><div class="v num">${esc(v)}</div>
+     <div class="s">${esc(s)}</div></div>`).join('')}</div>`;
+}
+
+function logTable(rows){
+  const when=s=>(NEXT[s.id]&&NEXT[s.id].result&&NEXT[s.id].result.at)||(s.closed&&s.closed.at)||'';
+  const sorted=rows.slice().sort((a,b)=>String(when(b)).localeCompare(String(when(a))));
+  return `<section class="sect"><h3>What happened to each suggestion</h3>
+    <p class="sub2">Moves Claude has carried out, and suggestions the scout closed, newest first.</p>
+    <div class="panel"><div class="tscroll"><table class="lines"><thead><tr>
+      <th>Date</th><th>Record</th><th>Move</th><th>Your call</th><th>Outcome</th></tr></thead><tbody>
+    ${sorted.map(s=>{const d=NEXT[s.id]||{}, p=projOf(s.p), r=d.result; return `<tr>
+      <td>${esc(shortDate(when(s)))}</td>
+      <td><b>${esc(s.ref||'New record')}</b> ${esc(s.name||'')}<br>
+        <span style="color:var(--faint);font-size:12px">${esc(p.code||'')} · ${esc(FAMILY[s.family]||'')}</span></td>
+      <td>${esc(s.from||'—')} → ${esc(s.to||'—')}</td>
+      <td>${d.decision?`<span class="verdict ${d.decision==='proceed'?'clear':'tight'}">${d.decision==='proceed'?'Proceed':'Hold'}</span>`
+        +(d.comment?`<br><span class="cm">“${esc(d.comment)}”</span>`:''):'<span style="color:var(--faint)">—</span>'}</td>
+      <td>${r?`<b>Done</b>${r.by?' by '+esc(r.by):''}${r.note?`<br><span class="cm">${esc(r.note)}</span>`:''}`
+        :`<b>Closed by the scout</b>${s.closed&&s.closed.note?`<br><span class="cm">${esc(s.closed.note)}</span>`:''}`}</td>
+      </tr>`;}).join('')}
+    </tbody></table></div></div></section>`;
+}
+
+function nextEmpty(){
+  if(SCOUT==='waiting') return `<div class="empty" style="margin-top:22px"><b>Looking for the scout's suggestions</b>
+    They are kept in this page's own store, which takes a moment to answer.</div>`;
+  if(SCOUT==='off') return `<div class="empty" style="margin-top:22px"><b>Suggestions can't be read in this view</b>
+    They live in the page's private store, which only opens inside claude.ai for the desk's owner.</div>`;
+  return `<div class="empty" style="margin-top:22px"><b>No suggestions yet</b>
+    Each scout run reads your work email and Aconex for news that moves a contract or variation,
+    such as legal comments closed out, a price arriving or a QS recommendation, and lists the next
+    step here with its evidence. Ask Claude to run the scout to fill it.</div>`;
+}
+
+const EMPTY_SUB={
+  decide:['Nothing to decide','Every suggestion has a call on it. Proceeding ones wait for Claude; held ones wait for the scout.'],
+  proceed:['Nothing queued for Claude','Suggestions you mark Proceed wait here until you ask Claude to process them.'],
+  hold:['Nothing on hold','A held suggestion waits here with your reason. The scout reads it on each run and brings the card back when it sees what you were waiting for.'],
+  log:['Nothing logged yet','Moves Claude has carried out, and suggestions the scout closed, are kept here.']};
+
+function nextNote(){
+  const el=document.getElementById('teamnote'); if(!el) return;
+  el.innerHTML = OWNER===true
+    ? `<b>Only you can see this tab.</b> Suggestions come from your work email and Aconex, so they
+       are kept where only the desk's owner can read them. Proceed and Hold are recorded here and
+       nowhere else: Forma changes only when you ask Claude to process the queue.`
+    : `Scout suggestions are drawn from the desk owner's own email and Aconex, and only the owner
+       can read them. Nothing here changes Forma.`;
+  el.hidden=false;
+}
+
+function renderNext(){
+  const SUBS=[['decide','To decide'],['proceed','Proceeding'],['hold','On hold'],['log','Log']];
+  if(!SUBS.some(([k])=>k===SUB)) SUB='decide';
+  document.querySelectorAll('textarea[id^="nxc-"]').forEach(t=>{DRAFT[t.id]=t.value;});
+  document.getElementById('subs').innerHTML=SUBS.map(([k,l])=>
+    `<button class="sub" role="tab" data-s="${k}" aria-selected="${SUB===k}">${l}
+      <span class="n">${inState(k).length}</span></button>`).join('');
+
+  const fams=[...new Set(SUGS.map(s=>s.family).filter(Boolean))];
+  const chips=[['all','All']]
+    .concat(PROJ.filter(p=>SUGS.some(s=>s.p===p.key)).map(p=>['p:'+p.key,String(p.name).split(' ')[0]]))
+    .concat(fams.length>1?fams.map(f=>['f:'+f,(FAMILY[f]||f)+'s']):[]);
+  if(!chips.some(([f])=>f===FILTER)) FILTER='all';
+  document.getElementById('bar').innerHTML=(SUGS.length>1?chips.map(([f,l])=>
+    `<button class="chip" data-f="${f}" aria-pressed="${FILTER===f}">${esc(l)}</button>`).join(''):'')
+    +'<span class="spacer"></span><button class="chip" id="themeBtn">Theme</button>';
+
+  const keep=s=>FILTER==='all'||(FILTER.startsWith('p:')&&s.p===FILTER.slice(2))
+    ||(FILTER.startsWith('f:')&&s.family===FILTER.slice(2));
+  const pick=inState(SUB), rows=pick.filter(keep);
+  let html='';
+  if(SCOUT!=='ready' || !SUGS.length) html=(SCOUT==='ready'?nextTiles():'')+nextEmpty();
+  else {
+    html+=nextTiles();
+    if(SUB==='proceed' && pick.length) html+=`<div class="teamnote" style="margin-top:18px">
+      When you're ready, tell Claude <b>“process my next steps”</b>. It reads this list and your
+      comments, shows you what it will do for each, and asks before writing anything to Forma.</div>`;
+    if(!pick.length){ const [b,t]=EMPTY_SUB[SUB];
+      html+=`<div class="empty" style="margin-top:22px"><b>${b}</b>${t}</div>`; }
+    else if(!rows.length) html+=`<div class="empty" style="margin-top:22px"><b>Nothing matches that filter</b>
+        ${plural(pick.length,'suggestion')} here in total.</div>`;
+    else if(SUB==='log') html+=logTable(rows);
+    else {
+      const reo=s=>NEXT[s.id]&&NEXT[s.id].decision==='hold'?0:1;
+      const sorted=rows.slice().sort(SUB==='decide'
+        ? (a,b)=>(reo(a)-reo(b))||((CONF[a.conf]??3)-(CONF[b.conf]??3))||String(b.found||'').localeCompare(String(a.found||''))
+        : (a,b)=>String((NEXT[b.id]||{}).at||'').localeCompare(String((NEXT[a.id]||{}).at||'')));
+      html+=`<section class="proj">${sorted.map(sugCard).join('')}</section>`;
+    }
+  }
+  document.getElementById('body').innerHTML=html;
+  nextNote();
+}
+
+async function handleNext(el){
+  const id=el.dataset.k, act=el.dataset.nx, s=SUGS.find(x=>x.id===id);
+  if(!s || !DB) return;
+  const msg=document.getElementById('nxmsg-'+id), ref=DB.doc('nextsteps/'+id);
+  try{
+    if(act==='undo'){
+      if(NEXT[id]&&NEXT[id].result) return;
+      await ref.delete(); delete NEXT[id];
+    } else {
+      const comment=(document.getElementById('nxc-'+id)?.value||'').trim();
+      const v={decision:act==='proceed'?'proceed':'hold', at:isoToday()};
+      if(comment) v.comment=comment;
+      await ref.set(v); NEXT[id]=v; delete DRAFT['nxc-'+id];
+    }
+  }catch(e){
+    if(msg) msg.textContent='That was not saved. Only the desk’s owner can make a call on a suggestion.';
+    return;
+  }
+  render();
+}
+
+/* ---------------- shell ---------------- */
+/* The project names, joined for prose ("X and Y"). Read from the payload so a
+   desk never describes a project it is not showing. */
+const WHERE = (() => {
+  const n = PROJ.map(p => String(p.name || '').split(' ')[0]).filter(Boolean);
+  return n.length < 2 ? (n[0] || 'this project')
+       : n.slice(0, -1).join(', ') + ' and ' + n.slice(-1);
+})();
+const DESKS={
+  cost:{label:'Cost', sub:'Contracts &amp; variations', eyebrow:'Assemble · Cost Management',
+    title:'Contract &amp; Variation Desk',
+    lede:`Every contract and variation that has stopped moving on ${WHERE}, against `
+       + `the approval step holding it and the budget line it draws on.`,
+    tabs:[['variations','Variations'],['contracts','Contracts']]},
+  spend:{label:'Spend', sub:'Invoices', eyebrow:'Assemble · Cost Management',
+    title:'Invoice Approval Desk',
+    lede:`Every invoice awaiting action on ${WHERE}, against the budget line it `
+       + `draws on — so the call is made on the line, not the invoice alone.`,
+    tabs:[['invoices','Awaiting action']]},
+  next:{label:'Next steps',
+    sub:()=>{const n=inState('decide').length;
+      return SCOUT==='ready'&&n?plural(n,'move')+' to decide':'Email &amp; Aconex';},
+    eyebrow:'Assemble · Cost Admin', title:'Next Steps',
+    lede:`What scout-bot found in your work email and Aconex that could move a contract or `
+       + `variation on ${WHERE}. Proceed or hold each one; Claude carries out what you proceed.`,
+    tabs:[['next','Suggested moves']], custom:()=>renderNext()}
+};
+let SUPER='cost', TAB='variations', SUB='summary', FILTER='all';
+const setOf = t => t==='variations'?VARS : t==='contracts'?CONS : INVS;
+const kindOf = t => t==='variations'?'variation' : t==='contracts'?'contract' : 'invoice';
+const FILTERS={all:()=>true, mine:isMine, old:isOld, contra:isContra,
+  blocked:r=>r.code?isBlocked(r):false, queued:r=>!!STATE[r.id]};
+
+/* Said on the page, not in a briefing nobody kept: a shared desk is not a
+   privacy boundary. The payload sits in the page source, so everyone with the
+   link can read every record on it whatever the page chooses to show. */
+function teamNote(set){
+  const el=document.getElementById('teamnote');
+  if(!el) return;
+  if(!TEAM){ el.hidden=true; return; }
+  const bits=[];
+  if(ME) bits.push(`Signed in as <b>${esc(ME)}</b>.`);
+  else bits.push(`<b>This desk cannot tell who you are</b>, so nothing is marked
+    as yours and no decision can be queued. Open it from your own Claude account.`);
+  if(ME && !set.some(isMine))
+    bits.push(`No step on this tab is named to you — these are someone else's to answer.`);
+  if(CANWRITE===false)
+    bits.push(`Your access is read-only: you can see the queue but not add to it.`);
+  bits.push(`This is a <b>team desk</b> — everyone with the link sees every record on
+    it, and every queued decision and comment. It is not a privacy boundary.`);
+  el.innerHTML = bits.join(' ');
+  el.hidden = false;
+}
+
+function render(){
+  /* The Next steps tab is the owner's alone; anyone else never gets it. */
+  if(SUPER==='next' && OWNER===false) SUPER='cost';
+  const desk=DESKS[SUPER];
+  if(!desk.tabs.some(([k])=>k===TAB)) TAB=desk.tabs[0][0];
+
+  document.getElementById('supers').innerHTML = Object.entries(DESKS)
+    .filter(([k])=>!(k==='next' && OWNER===false)).map(([k,d])=>
+    `<button class="super" role="tab" data-sp="${k}" aria-selected="${SUPER===k}">${d.label}
+      <span class="n">${typeof d.sub==='function'?d.sub():d.sub}</span></button>`).join('');
+  document.getElementById('eyebrow').textContent = desk.eyebrow;
+  document.getElementById('title').innerHTML = desk.title;
+  document.getElementById('lede').innerHTML = desk.lede;
+  if(desk.custom){ document.getElementById('tabs').innerHTML=''; desk.custom(); return; }
+  const set=setOf(TAB), kind=kindOf(TAB);
+
+  document.getElementById('tabs').innerHTML = desk.tabs.length>1 ? desk.tabs.map(([k,l])=>
+    `<button class="tab" role="tab" data-t="${k}" aria-selected="${TAB===k}">${l}
+      <span class="n">${setOf(k).length}</span></button>`).join('') : '';
+
+  const subs=[['summary','Summary',set.filter(r=>r.with).length]]
+    .concat(PROJ.map(p=>[p.key,p.name,set.filter(r=>r.p===p.key).length]));
+  document.getElementById('subs').innerHTML = subs.map(([k,l,n])=>
+    `<button class="sub" role="tab" data-s="${k}" aria-selected="${SUB===k}">${esc(l)}
+      <span class="n">${n}</span></button>`).join('');
+
+  const queuedN=set.filter(r=>STATE[r.id]).length;
+  document.getElementById('bar').innerHTML = SUB==='summary'
+    ? '<span class="spacer"></span><button class="chip" id="themeBtn">Theme</button>'
+    : [['all','All'],['mine','With me'],['old','Over 90 days']]
+      .concat(kind!=='invoice'?[['contra','Already dealt with']]:[])
+      .concat(kind==='contract'?[['blocked','Blocked']]:[])
+      .concat(queuedN?[['queued','Queued ('+queuedN+')']]:[])
+      .map(([f,l])=>`<button class="chip" data-f="${f}" aria-pressed="${FILTER===f}">${l}</button>`)
+      .join('')+'<span class="spacer"></span><button class="chip" id="themeBtn">Theme</button>';
+
+  let html='';
+  if(SUB==='summary'){
+    html = tilesFor(set,kind) + flagsFor(set,kind)
+      + pressurePanel(set,kind) + ageingPanel(set);
+  } else {
+    const p=projOf(SUB);
+    const rows=set.filter(r=>r.p===SUB).filter(FILTERS[FILTER]||FILTERS.all);
+    if(rows.length){
+      const net=rows.reduce((t,r)=>t+(r.amt||0),0);
+      const tabPath = kind==='variation'?'changeorder':'cost';
+      html = `<section class="proj"><div class="proj-head">
+        <h2>${esc(p.name)}</h2>
+        <span class="meta">${esc(p.code)} · ${plural(rows.length,'record')} · net ${money(net)}</span>
+        <span class="spacer"></span>
+        <a class="btn" href="${BASE}/cost/${tabPath}/projects/${p.c}" target="_blank"
+           rel="noopener">${I_OUT} Open in Forma</a></div>
+        ${rows.map(r=>kind==='variation'?varCard(r):kind==='contract'?conCard(r):invCard(r)).join('')}
+        </section>`;
+    } else {
+      html = `<div class="empty" style="margin-top:22px"><b>Nothing matches that filter</b>
+        ${esc(p.name)} has ${plural(set.filter(r=>r.p===SUB).length,'record')} in total.</div>`;
+    }
+  }
+  document.getElementById('body').innerHTML = html;
+  teamNote(set);
+}
+
+document.getElementById('supers').addEventListener('click',e=>{
+  const b=e.target.closest('[data-sp]'); if(!b) return;
+  SUPER=b.dataset.sp; TAB=DESKS[SUPER].tabs[0][0]; SUB='summary'; FILTER='all';
+  window.scrollTo({top:0,behavior:'instant'}); render();});
+document.getElementById('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('[data-t]'); if(!b) return;
+  TAB=b.dataset.t; SUB='summary'; FILTER='all'; render();});
+document.getElementById('subs').addEventListener('click',e=>{
+  const b=e.target.closest('[data-s]'); if(!b) return;
+  SUB=b.dataset.s; FILTER='all'; render();});
+document.getElementById('bar').addEventListener('click',e=>{
+  if(e.target.id==='themeBtn'){
+    const cur=document.documentElement.getAttribute('data-theme');
+    const next=cur==='dark'?'light':cur==='light'?'dark'
+      :(matchMedia('(prefers-color-scheme:dark)').matches?'light':'dark');
+    document.documentElement.setAttribute('data-theme',next);
+    try{localStorage.setItem('cvdesk-theme',next);}catch(err){}
+    return;}
+  const b=e.target.closest('[data-f]'); if(!b) return;
+  FILTER = FILTER===b.dataset.f ? 'all' : b.dataset.f; render();});
+document.getElementById('body').addEventListener('click',e=>{
+  const nx=e.target.closest('[data-nx]');
+  if(nx){ handleNext(nx); return; }
+  const undo=e.target.closest('[data-undo]');
+  if(undo){ persist(undo.dataset.undo,null); return; }
+  const btn=e.target.closest('[data-do]'); if(!btn) return;
+  const key=btn.dataset.k, response=btn.dataset.do;
+  const box=document.getElementById('cmt-'+key);
+  const comment=(box?box.value:'').trim();
+  if(response==='revise' && !comment){
+    if(box){ box.focus(); box.placeholder='A comment is required to send something back.'; }
+    return;}
+  persist(key,{response,comment,at:RAW.today});});
+
+/* NOTHING IN THE SHELL CARRIES A DATE OR A PROJECT NAME.
+   The masthead stamp, the footer's read date and the refresh note are all
+   rendered from the payload, so a refresh replaces the payload block and
+   nothing else - and the same shell serves any project set. */
+const MONTHS=['January','February','March','April','May','June','July',
+              'August','September','October','November','December'];
+function stamps(){
+  const d=/^(\d{4})-(\d{2})-(\d{2})$/.exec(RAW.today||'');
+  const long = d ? `${+d[3]} ${MONTHS[+d[2]-1]} ${d[1]}` : (RAW.today||'—');
+  const shrt = d ? `${+d[3]} ${MONTHS[+d[2]-1].slice(0,3)} ${d[1]}` : (RAW.today||'—');
+  document.getElementById('stampWhen').textContent = 'Read '+shrt;
+  document.getElementById('stampWho').textContent =
+    PROJ.map(p=>`${String(p.name||'').split(' ')[0]} ${p.code||''}`.trim()).join(' · ');
+  document.getElementById('stampFull').textContent = long;
+  const r = RAW.refresh;
+  if(r && r.task){
+    document.getElementById('refreshBody').innerHTML =
+      `<b>Refreshes on its own, ${esc(r.when||'on a schedule')}.</b> A scheduled task called
+       <b>“${esc(r.task)}”</b> re-reads Forma for ${plural(PROJ.length,'project')} and
+       republishes this page. Find it under <b>Scheduled</b> in the Claude sidebar to change the
+       time, run it early, or turn it off. It only runs while the app is open — if it was
+       closed then, it runs at next launch.`;
+    document.getElementById('refreshNote').hidden = false;
+  }
+}
+
+try{const t=localStorage.getItem('cvdesk-theme'); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+stamps();
+render();
+</script>

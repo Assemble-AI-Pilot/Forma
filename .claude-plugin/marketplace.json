@@ -1,0 +1,14 @@
+{
+  "name": "assemble-plugins",
+  "owner": {
+    "name": "Assemble Communities"
+  },
+  "description": "Assemble's Claude Code plugins. Private to Assemble.",
+  "plugins": [
+    {
+      "name": "forma-user",
+      "source": "./plugins/forma-user",
+      "description": "Autodesk Forma (ACC Cost Management) for Assemble: read project money, and do the Forma work for consultant contracts and variations - each step confirmed in chat."
+    }
+  ]
+}
